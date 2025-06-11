@@ -1,0 +1,1797 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Quelques notes sur les statistiques},
+  pdfauthor={P.Gaignon},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{ucs}
+\usepackage[T1]{fontenc}
+\newcommand*\chancery{\fontfamily{pzc}\selectfont}
+\usepackage{float}
+\floatplacement{figure}{H}
+\usepackage{tgschola}
+\usepackage{frcursive}
+\usepackage{latexsym,amsmath,amssymb,textcomp,amsfonts}
+\usepackage{graphicx}
+\usepackage{nccpic}
+\usepackage{setspace}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\linespread{1.5}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+\usepackage{tcolorbox}
+\renewcommand{\thesection}{\Roman{section})}
+\renewcommand{\thesubsection}{\alph{subsection}}
+\usepackage{titlesec}
+\titlespacing{\section}{0cm}{1cm}{0.4cm}
+\titlespacing{\subsection}{0.7cm}{0.2cm}{0.1cm}
+\titlespacing{\subsubsection}{1.4cm}{0.cm}{0.1cm}
+\titlespacing{\paragraph}{2.1cm}{0.cm}{0.1cm}
+\usepackage{tocloft}
+\addtolength{\cftsecnumwidth}{10pt}
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\makeatletter
+\renewcommand*\l@figure{\@dottedtocline{1}{1em}{3.2em}}
+\makeatother
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{Quelques notes sur les statistiques}
+\author{P.Gaignon}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{4}
+\tableofcontents
+}
+\pagebreak
+
+\listoffigures
+
+\section*{A propos de ce document :}
+
+Ce document est destiné à une utilisation interne uniquement. Merci de
+ne pas le diffuser, s'agissant d'un document interne de travail, et
+étant un document servant de notes pour la consultance en statistiques.
+Un document spécifique destiné aux étudiants est en cours d'élaboration.
+
+Pour chaque partie, il est précisé les packages nécessaires à installer
+pour faire tourner le code proposé. Il est également important
+d'installer les dépendances des packages pour que tout fonctionne. Des
+commentaires de code sont également ajoutés pour expliquer certains
+éléments particuliers lors de la mise en pratique sous R.
+
+Attention, il ne s'agit pas d'un document apprenant à coder en R, mais
+donnant les éléments nécessaires pour réaliser certaines analyses. La
+majorité des analyses sont réalisées à partir de données déjà présentes
+dans R.
+
+\pagebreak
+
+\hypertarget{quelques-bases-statistiques}{%
+\section{Quelques bases
+statistiques}\label{quelques-bases-statistiques}}
+
+\pagebreak
+
+\hypertarget{analyse-factorielle}{%
+\section{Analyse Factorielle}\label{analyse-factorielle}}
+
+\pagebreak
+
+\hypertarget{classification}{%
+\section{Classification}\label{classification}}
+
+\pagebreak
+
+\hypertarget{ruxe9gression}{%
+\section{Régression}\label{ruxe9gression}}
+
+\hypertarget{ruxe9gression-logistique}{%
+\section{Régression Logistique}\label{ruxe9gression-logistique}}
+
+\hypertarget{suxe9lection-de-moduxe8les}{%
+\section{Sélection de modèles}\label{suxe9lection-de-moduxe8les}}
+
+\hypertarget{suxe9lection-de-moduxe8les-1}{%
+\section{Sélection de modèles}\label{suxe9lection-de-moduxe8les-1}}
+
+Dans l'exemple, on va s'intéresser à l'épaisser de gras dorsal. Il
+s'agit d'une référence fixée par le marché mesuré dans les abbatoirs de
+porcs, et qui permet une évaluation indirecte par mesure sur la
+carcasse. Il existe différents type d'instruments pour essayer d'évaluer
+la qualité de la viande de porcs, mesurant l'épaisseur de gras et de
+muscle. L'objectif est d'obtenir une bonne prédiction du TMP. Il existe
+aussi des scanners maintenant qui apportent plus d'informations car ils
+étudient des zones plus larges, mais leur emploi est plus couteux. Pour
+cela, on dispose de différentes zones de mesure, ainsi que la mesure
+exacte du TMP.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TMP}\OtherTok{\textless{}{-}}\FunctionTok{read.table}\NormalTok{(}\StringTok{"Regression/19624\_DIS05.txt"}\NormalTok{,}\AttributeTok{sep=}\StringTok{","}\NormalTok{,}\AttributeTok{header=}\NormalTok{T) }\CommentTok{\#issu des données Agrocampus}
+\end{Highlighting}
+\end{Shaded}
+
+L'objectif est de construitre une équation (donc un modèle) de
+prédiction (ici du TMP) à l'aide de mesure indirecte. Il s'agit d'une
+mise en équation du vivant, de ce que l'on observe, de quelque chose
+qu'on ne maitrise pas dans le but d'expliquer et/ou prédire.
+
+Modèle de régression linéaire :
+
+\begin{center}
+$Y =\beta_{0}+\sum_{i=1}^{p}\beta_{i}x_{i}+\epsilon$
+\end{center}
+
+où :
+
+\begin{itemize}
+\item
+  \(p\) est le nombre de variables (ici le nombre d'épaisseurs
+  tissulaires mesurées)
+\item
+  \(\epsilon\) est l'erreur résiduelle d'écart-type \(\sigma\)
+\end{itemize}
+
+Comment peut-on estimer un modèle ? Comment le valide-t-on ? On va
+partir de modèles connus (linéaires) vers non connus (non linéaires) à
+partir de mesures indirectes pour obtenir les prédictions qui nous
+intéressent et un modèle de référence (ex: modèle de prédiction du TMP).
+Cependant, s'il y a beaucoup de variables, la statistique est incapable
+de spécifier la non-linéarité, à cause du nombre de composantes trop
+élevé.
+
+Les modèles non-linéaires sont souvent avec 2 ou 3 variables, que l'on
+décompose toujours en deux parties, une ``prévisible'' (tendance
+moyenne) et une autre variable.
+
+Par exemple, il y al test du CGM (Capteur de Gras Maigre) dans le cas du
+TMP qui associé à des lieux mesures de références.
+
+Si l'on observe le tableau des corrélations des variablex explicatives,
+on observe une redondance de l'information, peut-être un sous-modèle
+serait-il plus intéressant (3 blocs de variables corrélées).
+
+\begin{figure}
+  \centering
+  \includegraphics{Regression/Tableau-Correlation.png}
+  \caption{Corrélations entre variables du jeu de données}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod}\OtherTok{\textless{}{-}}\FunctionTok{glm}\NormalTok{(TMP89}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{data=}\NormalTok{TMP[}\FunctionTok{is.na}\NormalTok{(TMP}\SpecialCharTok{$}\NormalTok{TMP89)}\SpecialCharTok{==}\NormalTok{F,}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\SpecialCharTok{:}\DecValTok{41}\NormalTok{)])}
+\FunctionTok{summary}\NormalTok{(mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+% 
+% Call:
+% glm(formula = TMP89 ~ ., data = TMP[is.na(TMP$TMP89) == F, c(1, 
+%     3:41)])
+% 
+% Deviance Residuals: 
+%  [1]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+% [26]  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+% [51]  0  0  0  0  0  0  0  0  0  0
+% 
+% Coefficients: (6 not defined because of singularities)
+%               Estimate Std. Error t value Pr(>|t|)
+% (Intercept)  2.577e-12         NA      NA       NA
+% NUMORD      -9.418e-15         NA      NA       NA
+% ABATT1       3.195e-12         NA      NA       NA
+% CC           4.683e-14         NA      NA       NA
+% GGENE1       2.638e-13         NA      NA       NA
+% GGENE2      -1.383e-13         NA      NA       NA
+% GGENE3       7.913e-14         NA      NA       NA
+% SEXECH1      1.538e-13         NA      NA       NA
+% CHGRAS       5.516e-14         NA      NA       NA
+% CHMUSCLE     4.865e-14         NA      NA       NA
+% SEXCGM1             NA         NA      NA       NA
+% G1CGM       -1.476e-14         NA      NA       NA
+% G2CGM       -1.204e-14         NA      NA       NA
+% M2CGM       -9.589e-15         NA      NA       NA
+% DATEFR1      3.296e-13         NA      NA       NA
+% DATEFR2     -5.180e-12         NA      NA       NA
+% DATEFR3      3.078e-13         NA      NA       NA
+% DATEFR4     -4.692e-12         NA      NA       NA
+% DATEFR5      2.971e-13         NA      NA       NA
+% DATEFR6     -4.628e-12         NA      NA       NA
+% DATEFR7      7.572e-13         NA      NA       NA
+% DATEFR8      3.737e-12         NA      NA       NA
+% DATEFR9     -4.320e-13         NA      NA       NA
+% DATEFR10     3.544e-12         NA      NA       NA
+% DATEFR11     3.900e-12         NA      NA       NA
+% DATEFR12     5.764e-13         NA      NA       NA
+% DATEFR13    -4.441e-12         NA      NA       NA
+% DATEFR14     1.121e-12         NA      NA       NA
+% DATEFR15    -4.120e-12         NA      NA       NA
+% DATEFR16     9.373e-13         NA      NA       NA
+% DATEFR17    -3.650e-12         NA      NA       NA
+% DATEFR18     7.759e-13         NA      NA       NA
+% DATEFR19     3.196e-12         NA      NA       NA
+% DATEFR20     3.123e-12         NA      NA       NA
+% DATEFR21     2.793e-12         NA      NA       NA
+% DATEFR22    -7.803e-13         NA      NA       NA
+% DATEFR23     3.149e-12         NA      NA       NA
+% DATEFR24    -3.831e-13         NA      NA       NA
+% DATEFR25            NA         NA      NA       NA
+% SEXE1       -1.972e-13         NA      NA       NA
+% FRGRAS      -4.439e-14         NA      NA       NA
+% FRMUSCLE    -5.623e-14         NA      NA       NA
+% GR34VLFR    -3.123e-14         NA      NA       NA
+% GR23DCFR     1.759e-14         NA      NA       NA
+% GR34DCFR     9.436e-14         NA      NA       NA
+% GR34DCPAFR  -9.613e-14         NA      NA       NA
+% MU23DCFR     2.343e-14         NA      NA       NA
+% MU34DCFR     2.189e-14         NA      NA       NA
+% MU34DCPAFR  -3.890e-14         NA      NA       NA
+% FILPIECE    -5.076e-16         NA      NA       NA
+% LONPIECE     3.999e-15         NA      NA       NA
+% LONGEX      -4.103e-15         NA      NA       NA
+% EPAPIECE    -3.270e-15         NA      NA       NA
+% EPAGEX       3.570e-15         NA      NA       NA
+% JAMPIECE    -1.342e-15         NA      NA       NA
+% JAMGEX       1.298e-15         NA      NA       NA
+% LONMUGIOS   -3.864e-15         NA      NA       NA
+% EPAMUGIOS    2.925e-15         NA      NA       NA
+% JAMMUGIOS    1.149e-15         NA      NA       NA
+% LONPERTPAR          NA         NA      NA       NA
+% EPAPERTPAR          NA         NA      NA       NA
+% JAMPERTPAR          NA         NA      NA       NA
+% TMUS3P      -2.510e-14         NA      NA       NA
+% TMP90        9.889e-01         NA      NA       NA
+% TVM         -2.315e-14         NA      NA       NA
+% DEN                 NA         NA      NA       NA
+% 
+% (Dispersion parameter for gaussian family taken to be NaN)
+% 
+%     Null deviance: 7.0543e+02  on 59  degrees of freedom
+% Residual deviance: 7.4771e-26  on  0  degrees of freedom
+% AIC: -3424.7
+% 
+% Number of Fisher Scoring iterations: 1
+\end{verbatim}
+
+\pagebreak
+
+\hypertarget{analyse-discriminante-linuxe9aire-et-quadratique}{%
+\section{Analyse Discriminante (Linéaire et
+Quadratique)}\label{analyse-discriminante-linuxe9aire-et-quadratique}}
+
+\pagebreak
+
+\hypertarget{analyse-de-survie}{%
+\section{Analyse de survie}\label{analyse-de-survie}}
+
+\pagebreak
+
+\hypertarget{meta-analyse}{%
+\section{Meta-analyse}\label{meta-analyse}}
+
+\hypertarget{machine-learning}{%
+\section{Machine Learning}\label{machine-learning}}
+
+Les méthodes de machine learning peuvent être relativement gourmandes en
+termes de temps de calcul. Pour éviter une compilation du document
+demandant 3 jours, l'ensemble du code sera mis en commentaire, pou rêtre
+accessible mais éviter de ne pouvoir compiler ce document.
+
+\hypertarget{a-propos-des-donnuxe9es-utilisuxe9es-dans-ce-document}{%
+\subsection{A propos des données utilisées dans ce
+document}\label{a-propos-des-donnuxe9es-utilisuxe9es-dans-ce-document}}
+
+\hypertarget{validation-dun-moduxe8le-de-machine-learning}{%
+\subsection{Validation d'un modèle de Machine
+Learning}\label{validation-dun-moduxe8le-de-machine-learning}}
+
+Part d'un ensemble de variables X et une variable Y réponse. On découpe
+X en deux sous-jeu de données, X\(_1\) et X\(_2\). On appelle X\(_1\) le
+jeu de données d'entraînement ou d'apprentissage. Il permet d'ajuster un
+modèle pour prédire Y. X\(_2\) est le jeu de données test ou de
+validation. On peut alors prédire ses sorties Y\(_2\)' à partir du
+modèle ajusté obtenu précédemment. On parle alors de validation croisée
+(car on croise deux jeux de données indépendant pour l'ajustement et la
+validation).
+
+Pour des variables qualitatives bimodales, on peut alors définir une
+matrice de confusion :
+
+\begin{table}[!h]
+
+  \begin{tabular}{ll|cc}
+  & & Comportements& prédits \\
+  &&Modalité A & Modalité B\\
+  \hline
+  Comportements&Modalité A & VP&FN\\
+  observés&Modalité B&FP&VN\\
+  \hline
+  \end{tabular}
+  \caption{Matrice de confusion en machine learning}
+
+\end{table}
+
+avec
+
+\begin{itemize}
+\tightlist
+\item
+  VP : Vrai Positif
+\item
+  FN : Faux Négatif
+\item
+  FP: Faux Positif
+\item
+  VN : Vrai Négatif
+\end{itemize}
+
+On peut alors définir plusieurs indicateurs sur la qualité de la
+prédiction:
+
+\begin{itemize}
+\tightlist
+\item
+  Le pourcentage de bon classement :
+  \(\frac{VP+VN(?)}{VP+VN+FP+FN}*100\)
+\item
+  La sensibilité : \(\frac{VP}{VP+FN}\), la capacité à bien identifier
+  les vrais positifs. Un test très sensible signifiera que toute
+  modalité A sera bien détectée.
+\item
+  La spécificité :\(\frac{VN}{FP+VN}\), la capacité à bien discriminer
+  les vrais négatifs. Un test très spécifique ne donnera jamais de faux
+  positif.
+\end{itemize}
+
+Pour éviter des effets aléatoires sur les résultats de ces indicateurs
+liés à la sélection des individus, on peut réaliser de la validation
+croisée répétée (K-fold cross validation). On prend alors 90\% des
+données pour l'entraînement(on parle de données dans le bag), et on
+valide sur les 10\% de données restants(données dites out-of-bag). On
+réalise cela 10 fois, de façon à que chaque donnée aient fait parti une
+fois du jeu de données de validation. On obtient pour chacun des dix
+ajustements une matrice de confusion. Pour avoir la matrice de confusion
+globale, on somme chacune des dix matrices obtenues avant. On calcule
+alors les métriques de performances sur cette matrice de confusion
+globale. On peut également réaliser du Leave-one-out validation. Cela
+consiste à ne laisser d'un seul individu en dehors du bag.
+
+Lors de ces validations, il faut fait attention à la stratification des
+données, c'est-à-dire que dans chaque sous-jeu de données, les modalités
+à prédire doivent avoir des occurrences les plus proches possibles du
+jeu de données initiales pour éviter des soucis liés à ces différences
+d'occurrence.
+
+\hypertarget{support-vector-machine-svm}{%
+\subsection{Support Vector Machine
+(SVM)}\label{support-vector-machine-svm}}
+
+\hypertarget{principe-de-lalgorithme}{%
+\subsubsection{Principe de l'algorithme}\label{principe-de-lalgorithme}}
+
+C'est une méthode de classification de machine learning développée dans
+les années 1990 sur la base de la théorie de Vapnik-Tchervonenkis. elle
+prédit des variables qualitatives à partir de variables qualitatives et
+quantitatives. Cette méthode a été adoptée dans une diversité de
+domaines : aptitude à travailler avec des données de grandes dimensions,
+faible nombre d'hyperparamètres à ajuster et très bons résultats. Le
+principe du SVM est de trouver une surface de décision, appelée
+\emph{hyperplan}, qui discrimine au mieux les échantillons selon leur
+classe.
+
+Si on suppose la distribution des échantillons selon (X\(_1\),X\(_2\)),
+alors l'algorithme SVM identifie l'hyperplan qui discrimine au mieux les
+deux types d'échantillon. Ceci se fait à l'aide d'une équation de
+l'hyperplan \(b+w_1X_1+w_2+X_2=0\), avec X\(_1\) et X\(_2\) les deux
+variables du jeu de données, \(w_1\) et \(w_2\) les pods associés à
+chacune des variables, et \(b\) une constante. On définit alors deux
+domaines, positif ou négatif, par rapport à la valeur données par
+l'équation \(b+w_1X_1+w_2+X_2\), qui définissent alors à laquelle des
+deux modalités chaque échantillon sera attribué.
+
+Si on définit \(y_i\) la réponse à l'échantillon \(x_i\) avec des
+valeurs possibles -1 et +1, alors l'échantillon est bien classé
+uniquement si \(y_i(b+w_1X_1+w_2+X_2) > 0\).
+
+\hypertarget{fonctionnement-de-lalgorithme}{%
+\subsubsection{Fonctionnement de
+l'algorithme}\label{fonctionnement-de-lalgorithme}}
+
+Pour déterminer l'hyperplan optimal parmi l'infinité de possibilité,
+l'algorithme SVM utilise la \emph{méthode de la marge}. Il recherche
+pour cela la plus courte distance qui séparent les échantillons les plus
+proches de l'hyperplan, aussi appelés \emph{vecteurs supports} (support
+vector).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=5.33333in]{ML/SVM_plan.png}
+\caption{Principe de l'algorithme SVM}
+\end{figure}
+
+\hypertarget{etape-1-expression-de-la-marge}{%
+\paragraph{Etape 1 : Expression de la
+Marge}\label{etape-1-expression-de-la-marge}}
+
+Si on considère \(M_S\) un jeu de donné, alors \(M_S\) est défini par
+ses variables \(X_{S,k}\) (k étant un entier natuer), et associé à la
+classe \(y_S\) qui vaut -1 ou +1. On suppose que \(M_S\) est un vecteur
+support potentiel. Soit H l'hyperplan défini par l'équation
+\(b+w_1X_1+w_2+X_2=0\)? Connaissant l'équation du plan, on peut définir
+un vecteur normal au plan noté \(\vec{w}\) de coordonnées
+(w\(_1\);w\(_2\)). On définit alors la marge comme la plus courte
+distance qui sépare les échantillons les plus proches de l'hyperplan et
+l'hyperplan H. On réalise alors une projection orthogonale de \(M_S\)
+sur ce plan. Le problème revient donc à calculer la distance associé à
+la projection orthogonale d'un point de coordonnées connues sur un plan
+défini par son équation cartésienne. On peut donc avoir :
+
+\begin{center}
+  $marge=d(M_S,H)=\frac{|b+w_1X_1+w_2+X_2|}{\sqrt{w_1^2+w_2^2}}$
+\end{center}
+
+\hypertarget{etape-2-maximisation-de-la-marge}{%
+\paragraph{Etape 2 : Maximisation de la
+marge}\label{etape-2-maximisation-de-la-marge}}
+
+L'hyperplan optimal est alors celui qui permet de maximiser la marge. Il
+existe une infinité de solutions pour \(b\), \(w_1\) et \(w_2\) tels que
+\(|b+w_1X_1+w_2+X_2| = 1\), avec \(M_S\) un vecteur support.
+
+On ajoute alors la contrainte de deux frontières, positives et
+négatives, tel que :
+
+\begin{center}
+
+Frontière + : $b+w_1X_{S1}^{+}+w_2+X_{S2}^{+}=1$
+
+Frontière - :  $b+w_1X_{S1}^{-}+w_2+X_{S2}^{-}=-1$
+
+\end{center}
+
+avec :
+
+\begin{itemize}
+\tightlist
+\item
+  \(M_S^{+}(X_{S1}^{+},X_{S2}^{+})\) un vecteur support appartenant à la
+  frontière positive
+\item
+  \(M_S^{-}(X_{S1}^{-},X_{S2}^{-})\) un vecteur support appartenant à la
+  frontière négative
+\end{itemize}
+
+En considérant la condition de normalisation, le problème revient à
+trouver les coefficients \(b\), \(w_1\) et \(w_2\) tels que :
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  La condition \(y_i(b+w_1X_1+w_2+X_2) \geq 1\) soit satisfaite pour
+  tout échantillon \(P_i\) du jeu de données
+
+  \begin{itemize}
+  \item
+    Si \(y_i=-1\), alors l'échantillon est bien classé s'il est à gauche
+    de la frontière négative définie par
+    \(b+w_1X_{S1}^{-}+w_2+X_{S2}^{-} \leq -1\), soit
+    \(y_i(b+w_1X_{S1}^{-}+w_2+X_{S2}^{-}) \geq 1)\)
+  \item
+    Si \(y_i=1\), alors l'échantillon est bien classé s'il est à droite
+    de la frontière positive définie par
+    \(b+w_1X_{S1}^{+}+w_2+X_{S2}^{+} \geq 1\), soit
+    \(y_i(b+w_1X_{S1}^{-}+w_2+X_{S2}^{-}) \geq 1)\)
+  \end{itemize}
+\item
+  L'expression \(\sqrt{w_1^2+w_2^2}\) soit minimale : En considérant la
+  condition de normalisation \(|b+w_1X_1+w_2+X_2| = 1\), on a
+  \(marge = \frac{1}{\sqrt{w_1^2+w_2^2}}\). Maximiser la marge revient
+  donc à minimiser \(\sqrt{w_1^2+w_2^2}\). On se retrouve donc à devoir
+  minimiser \(\sqrt{w_1^2+w_2^2}\) sous la contrainte
+  \(y_S (b+w_1X_{S1}+w_2X_{S2}) \geq 1\). ce problème est résolu par la
+  méthode des multiplicateurs de Lagrange.
+\end{enumerate}
+
+Remarque : L'explication a été réalisé avec un jeu de données à 2
+variables. Le problème est généralisable avec m
+\textgreater\textgreater{} 2 variables. On recherche alors l'hyperplan
+suivant : \(b+\sum_{i=1}^mw_iX_i=0\). Trouver l'hyperplan optimal
+revient alors à minimiser \(\sqrt{\sum_i^mw_i^2}\) sous la contrainte
+\(y_S(b+\sum_i^mw_iX_{Si})\geq1\).
+
+Dans l'exemple déroulé, il y avait l'hypothèse qu'aucun échantillon ne
+doit être compris dans la marge. En pratique, cette contrainte peut
+mener à un sur-ajustement du modèle, et on risque d'avoir une une
+surface de décision trop spécifique au jeu de données utilisé pour
+l'apprentissage. On définit alors la \textbf{marge souple}, ou
+\textbf{marge faible}, c'est-à-dire une tolérance d'un certains nombres
+d'échantillons dans la marge. Cette tolérance est régulée par
+l'hyperparamètre C, dit paramètre de régularisation du SVM.
+
+De plus, dans le cas précédent, l'hypothèse était que les échantillons
+peuvent êtres discriminés par un séparateur strictement linéaire, mais
+ce n'est que rarement le cas. Pour cela, on permet de reconsidérer le
+problème en introduisant de nouvelles dimensions à l'aide d'une fonction
+de noyau. On définit alors \(\phi(X)\), l'espace de redescription.
+L'objectif est alors de trouver un séparateur linéaire dans ce nouvel
+espace \(\phi\). Cela revient à appliquer aux variables d'entrée X une
+transformation non-linéaire notée \(\phi\) et de trouver l'hyperplan
+optimal dans cet espace de redescription. En pratique, deux fonctions de
+noyau sont généralement utilisés :
+
+\begin{itemize}
+\tightlist
+\item
+  Le noyau polynomial : \(\phi(X_1,X_2)=(a+\sum_i^NXi{i1}X_{i2})^b\)
+  avec N le nombre d'échantillons, \((X_1,X_2)\) les deux variables,
+  \(b\) le degré du polynome et \(a\) une constante
+\item
+  La fonction de base radiale :
+  \(\phi(X_1,X_2)=e^{-\gamma ||X_1-X_2||^2}\), avec \(||X_1-X_2||\) la
+  distance euclidienne entre les variables, et \(\gamma\) un paramètre
+  de contrôle du sur-ajustement.
+\end{itemize}
+
+\emph{Références} : Yadav, A., 2018. Support Vector Machines (SVM)
+{[}WWW Document{]}. Data Sci. URL
+\url{https://towardsdatascience.com/support-vector-machines-svm-c9ef22815589}
+
+\hypertarget{mise-en-place-sous-r}{%
+\subsubsection{Mise en place sous R}\label{mise-en-place-sous-r}}
+
+Pour la mise en place, on utilisera deux packages, \textbf{carnet} et
+\textbf{kernlab}. Il est aussi important d'avoir deux jeux de données,
+un d'entraînement (ou d'apprentissage) et n de validation
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rm}\NormalTok{(}\AttributeTok{list=}\FunctionTok{ls}\NormalTok{())}
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(kernlab)}
+
+\CommentTok{\# traindata : jeu de données d\textquotesingle{}entraînements}
+\CommentTok{\# test\_select : jeu de données de validation}
+
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/testdata.Rdata"}\NormalTok{)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/traindata.Rdata"}\NormalTok{)}
+
+
+\CommentTok{\#  RECHERCHE DES PARAMETRES OPTIMAUX}
+\DocumentationTok{\#\#  CREATION DE LA GRILLE DE PARAMETRISATION ET METHODE POUR TROUVER LES PARAMETRES OPTIMAUX}
+\CommentTok{\# Vu qu\textquotesingle{}il y a une part d\textquotesingle{}aléatoire dans l\textquotesingle{}initialisation, il est important de fixer la "seed",}
+\CommentTok{\# C\textquotesingle{}est à dire l\textquotesingle{}aléatoire, pour pouvoir reproduire les résultats.}
+\CommentTok{\# svm.seed=111}
+\CommentTok{\# set.seed(svm.seed)}
+\CommentTok{\# On précise les règles d\textquotesingle{}apprentissages liés au pacakge}
+\CommentTok{\# fitControl \textless{}{-} trainControl(method="repeatedcv", \# on fait de la cross{-}validation répétée}
+\CommentTok{\#                            number=10, \# combien d\textquotesingle{}iteration}
+\CommentTok{\#                            repeats=3, \#nombre de jeu de donnée pour la cross{-}validation repétée}
+\CommentTok{\#                            search="grid", \# on}
+\CommentTok{\#                            allowParallel=TRUE) \# possibilité de travailler sur plusieurs coeurs}
+\CommentTok{\# Quelles valeurs de sigma et C on va tester}
+\CommentTok{\# mygrid \textless{}{-} expand.grid(sigma=seq(0.01,0.1,by=0.01),}
+\CommentTok{\#                       C=c(1,2,5,10,50,100,120,140,160,180,200,250,300,350,400,450,500,1000)) \# + valeurs de C élevées {-}{-}\textgreater{} + marge est stricte}
+\CommentTok{\# metric \textless{}{-} "Accuracy"}
+
+\DocumentationTok{\#\#  AJUSTEMENT DU MODELE SVM}
+\CommentTok{\# svm.fit \textless{}{-} train(y \textasciitilde{} ., data=traindata, \# On cherche à prédire y en fonction de toutes les variables}
+\CommentTok{\#                  method="svmRadial", \#on utile sur SVM avec coeur Radial}
+\CommentTok{\#                  trControl=fitControl, \# on utilise les conditions d\textquotesingle{}apprentissages}
+\CommentTok{\#                  metric=metric, \# Quelle métrique est utilisée}
+\CommentTok{\#                  preProcess=NULL,}
+\CommentTok{\#                  tuneGrid=mygrid) \# Quelle valeurs on teste.}
+
+
+\CommentTok{\# Chargement des résultats, pour éviter de perdre du temps}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file =} \StringTok{"ML/PartieApplications/SVM/2019{-}04{-}21\_model\_SVM\_TFEN10RECV90NORM.Rdata"}\NormalTok{)}
+
+\DocumentationTok{\#\#  PARAMETRES DU MODELE AJUSTE}
+\CommentTok{\# On cherche le meilleur couple d\textquotesingle{}hyperparamètres simga/C}
+\NormalTok{svm.fit}\SpecialCharTok{$}\NormalTok{bestTune}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%    sigma   C
+% 10  0.05 128
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(svm.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Learning_R_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#  EVALUATION DES PERFORMANCES DE ML}
+
+\DocumentationTok{\#\#  PERFORMANCE DU MODELE SUR JEU DE DONNEES D\textquotesingle{}ENTRAINEMENT}
+\CommentTok{\# On prédit les nouvelles valeurs sur le jeu de données d\textquotesingle{}entraînement}
+ \CommentTok{\# svm.predictions=predict(svm.fit, newdata=traindata)}
+ \CommentTok{\# save(file = "ML/PartieApplications/SVM/predictions\_train.Rdata",svm.predictions)}
+\CommentTok{\# On charge les résultats de la prédictions avec les données d\textquotesingle{}entrainement}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file =} \StringTok{"ML/PartieApplications/SVM/predictions\_train.Rdata"}\NormalTok{)}
+\NormalTok{perf\_svm\_fit\_traindata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{svm.predictions,}\AttributeTok{reference=}\NormalTok{traindata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\DocumentationTok{\#\#  PERFORMANCE DES DIFFERENTS MODELES TESTES PAR VALIDATION CROISEE}
+\NormalTok{perf\_svm\_fit\_cv }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(svm.fit}\SpecialCharTok{$}\NormalTok{results,}
+\NormalTok{                          C }\SpecialCharTok{==}\NormalTok{ svm.fit}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{C }\SpecialCharTok{\&}\NormalTok{ sigma }\SpecialCharTok{==}\NormalTok{ svm.fit}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{sigma,}
+                          \FunctionTok{c}\NormalTok{(}\StringTok{"Accuracy"}\NormalTok{, }\StringTok{"Kappa"}\NormalTok{))}
+\NormalTok{perf\_svm\_fit\_cv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%     Accuracy     Kappa
+% 10 0.9951483 0.9926083
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#  EVALUATION DE LA QUALITE DU MODELE AVEC LE JEU DE DONNEES }\AlertTok{TEST}
+\CommentTok{\# svm.predictions=predict(svm.fit, newdata=testdata)}
+\CommentTok{\# save(file = "ML/PartieApplications/SVM/predictions\_test.Rdata",svm.predictions)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file =} \StringTok{"ML/PartieApplications/SVM/predictions\_test.Rdata"}\NormalTok{)}
+\NormalTok{perf\_svm\_fit\_testdata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{svm.predictions,}\AttributeTok{reference=}\NormalTok{testdata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{mat\_conf\_svm }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(perf\_svm\_fit\_testdata}\SpecialCharTok{$}\NormalTok{table) }\CommentTok{\# Donne la matrice de confusion}
+\CommentTok{\# Quelles métriques pour la prédictino du jeu de données de validation}
+\NormalTok{metric\_overall\_svm }\OtherTok{\textless{}{-}}\NormalTok{ perf\_svm\_fit\_testdata}\SpecialCharTok{$}\NormalTok{overall}
+\NormalTok{metric\_byClass\_svm }\OtherTok{\textless{}{-}}\NormalTok{ perf\_svm\_fit\_testdata}\SpecialCharTok{$}\NormalTok{byClass}
+
+\CommentTok{\# ANALYSE DE L\textquotesingle{}IMPORTANCE DES VARIABLES}
+
+\NormalTok{svm.varImp }\OtherTok{\textless{}{-}} \FunctionTok{varImp}\NormalTok{(svm.fit, }\AttributeTok{scale=}\ConstantTok{TRUE}\NormalTok{)}
+\DocumentationTok{\#\# Classement par ordre d\textquotesingle{}importance global}
+\NormalTok{imp\_globale }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{apply}\NormalTok{(svm.varImp}\SpecialCharTok{$}\NormalTok{importance, }\DecValTok{1}\NormalTok{,}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))\}), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{)}
+\DocumentationTok{\#\# Variables les plus discriminantes pour les comportements les plus durs à discriminer}
+\NormalTok{imp\_standing\_none }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name =} \FunctionTok{rownames}\NormalTok{(svm.varImp}\SpecialCharTok{$}\NormalTok{importance), }\AttributeTok{imp =}\NormalTok{ svm.varImp}\SpecialCharTok{$}\NormalTok{importance}\SpecialCharTok{$}\NormalTok{Standing...None)}
+\NormalTok{imp\_standing\_none }\OtherTok{\textless{}{-}}\NormalTok{ imp\_standing\_none[}\FunctionTok{order}\NormalTok{(imp\_standing\_none}\SpecialCharTok{$}\NormalTok{imp, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),]}
+\NormalTok{top\_20\_standing\_none  }\OtherTok{\textless{}{-}}\NormalTok{ imp\_standing\_none[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\StringTok{"name"}\NormalTok{]}
+
+\NormalTok{imp\_walking }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name =} \FunctionTok{rownames}\NormalTok{(svm.varImp}\SpecialCharTok{$}\NormalTok{importance), }\AttributeTok{imp =}\NormalTok{ svm.varImp}\SpecialCharTok{$}\NormalTok{importance}\SpecialCharTok{$}\NormalTok{Walking)}
+\NormalTok{imp\_walking }\OtherTok{\textless{}{-}}\NormalTok{ imp\_walking[}\FunctionTok{order}\NormalTok{(imp\_walking}\SpecialCharTok{$}\NormalTok{imp, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),]}
+\NormalTok{top\_20\_walking  }\OtherTok{\textless{}{-}}\NormalTok{ imp\_walking[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\StringTok{"name"}\NormalTok{]}
+
+\CommentTok{\# \#  GENERER LES RESULTATS}
+\CommentTok{\# save(mat\_conf\_svm, file = "mat\_conf\_svm.RData")}
+\CommentTok{\# save(metric\_overall\_svm, file = "metric\_overall\_svm.RData")}
+\CommentTok{\# save(metric\_byClass\_svm, file = "metric\_byClass\_svm.RData")}
+\CommentTok{\# write.csv2(svm.varImp$importance, file = "varImp.svm.csv", dec = ".", sep = ";")}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{random-forest}{%
+\subsection{Random Forest}\label{random-forest}}
+
+Il s'agit d'un algorithme de machine learning relativement simple et
+intuitif développé par Breiman et al.~en 1984. Ses applications sont de
+la classification supervisée (variable réponse qualitative) ou de la
+régression (variable réponse quantitative). Elle appartient à la
+technique de bagging. Le principe est la création d'un ensemble d'arbres
+de décisions (ou de classification) de façon indépendante à partir d'un
+sous-ensemble d'échantillons choisi de manière aléatoire. Ceci donne
+alors une multitute d'arbres différents. Une fois la forêt (multitude
+d'arbre) obtenue, la classe associée à un nouvel échantillon est celle
+prédite par un vote majoritaire.
+
+\hypertarget{duxe9finition-dun-arbre-de-classification}{%
+\subsubsection{Définition d'un arbre de
+classification}\label{duxe9finition-dun-arbre-de-classification}}
+
+\begin{figure}
+\centering
+\includegraphics{ML/Tree.png}
+\caption{Structure d'un arbre de classification}
+\end{figure}
+
+Pour chaque noeud est associée une condition pour séparer le noeud
+parent et les noeuds enfants. A chaque noeud, l'objectif est de choisir
+la condition qui maximise la diminution d'impureté
+(i.e.~l'hétérogénéité) des noeuds enfants à partir du noeud parent. Pour
+cela, on utile l'index de Gini(G), défini par :
+
+\begin{center}
+$G=\sum_k^Np_k(1-p_k)$
+\end{center}
+
+avec N le nombre de classe (le nombre de modalité de la variable
+qualitative), et \(o_k\) la proportion d'échantillons correspondant au
+comportement \(k\) dans le noeud. S'il n'y a aucune impureté, alors G
+vaudra 0 (100 x 0), et sa valeur maximale est de 0.25 (50\% x 50\%).
+L'objectif est donc de diminuer l'impureté des noeuds en limitant le
+nombre de noeuds et branches nécessaires pour arriver aux feuilles
+terminales, on parle de \textbf{profondeur de l'arbre}. Cette profondeur
+conditionne directement le niveau de complexité de l'arbre. En
+augmentant cette complexité, il y a le risque d'avoir un sur-ajustement
+du modèle, avec un arbre qui serait trop spécifique du jeu de données
+d'entraînement. Pour cela, il y a un contrôle du sur-ajustement en
+imposant un nombre minimal d'échantillons dans chaque noeud ou en fixant
+un nombre maximal de branches à ne pas dépasser.
+
+Il est aussi possible de réaliser un \textbf{elagage de l'arbre}. Il
+s'agit d'une technique pour améliorer les performances de l'arbre une
+fois celui-ci obtenu. Pour cela, on va supprimer des branches qui
+utilisent des variables dont l'importance relative est faible. Cela
+améliore ainsi son pouvoir prédictif en réduisant sa complexité, et en
+limitant ainsi les risques de sur-ajustement. La méthode classique
+d'élagage consiste en la construction d'une suite d'arbres à partir de
+l'arbre obtenu en l'élaguant successivement. L'arbre conservé est celui
+qui garantit le meilleur compromis entre la taille de l'arbre et son
+coût de mauvais classement. On utilise pour cela le critère de
+complexité \(\alpha\) de Breiman
+
+\(\alpha = \frac{\epsilon(elagué(T,F),E)-\epsilon(T,E)}{nb\_feuilles(T)-nb\_feuilles(élagué(T,f))}\)
+
+avec \(elagué(T,F)\) l'arbre T élagué de la feuille \(f\),
+\(\epsilon(T,E)\) l'erreur obtenu sur un échantillon E du jeu de données
+avec l'arbre T.
+
+Remarque : Une procédure de cross-validation est souvent utilisée à
+cette étape pour générer l'échantillon E. D'autres approches peuvent
+être mises en oeuvre pour trouver le sous-arbre optimal mais le principe
+général reste le même.
+
+\hypertarget{principe-de-lalgorithme-de-foruxeat-aluxe9atoire}{%
+\subsubsection{Principe de l'algorithme de forêt
+aléatoire}\label{principe-de-lalgorithme-de-foruxeat-aluxe9atoire}}
+
+On considère \(t\) le nombre de l'itération.
+
+\hypertarget{etape-1-construction-des-arbres}{%
+\paragraph{Etape 1 : Construction des
+arbres}\label{etape-1-construction-des-arbres}}
+
+Soit t=1, On crée alors un nouveau jeu de donnée par la technique du
+bootstrap (Tirage aléatoire de n échantillons avec remise). Dans cet
+échantillon, certains échantillons ne sont jamais tirés, d'autres tirés
+plusieurs fois. Les échantillons qui n'ont jamais tirées sont ceux dits
+``\textbf{out-of-bag}.''
+
+On construit alors un arbre sur le jeu de données bootstrappé, avec
+\(m\) variables aléatoires à chaque noeud. Pour chaque noeud :
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  On tire de façon aléatoire m variables aléatoires (m\textless p). Par
+  défaut, \(m=\sqrt{p}\).
+\item
+  La condition retenue sur l'une des variables tirées est celle qui
+  discrimine au mieux les échantillons, donc celle qui minimise l'index
+  de Gini.
+\end{enumerate}
+
+Au noeud suivant, \(m\) variables sont de nouveau tirées aléatoirement
+(donc potentiellement d'autres variables). On reprend les mêmes règles
+de décision. On continue la construction de l'arbre jusqu'à atteindre
+les paramètres limitant le sur-ajustement soient atteints. Lorsque
+l'arbre de l'itération t = 1 est terminé, l'algorithme réitère les
+étapes pour t=2, et ainsi de suite jusqu'à ce que t = T.
+
+\hypertarget{etape-2-evaluation-de-la-classification-de-chacun-des-arbres}{%
+\paragraph{Etape 2 : Evaluation de la classification de chacun des
+arbres}\label{etape-2-evaluation-de-la-classification-de-chacun-des-arbres}}
+
+On mesure les performances de classification de chacun des arbres, puis
+de la forêt, calculées par l'algorithme. Pour chaque arbre, on utilise
+les OOB pour tester les performances de prédiction de chaque arbre. Cela
+permet d'avoir une évaluation robuste de chacun des classifieurs. On
+définit alors l'erreur moyenne de la forêt aléatoire comme la moyenne
+des erreurs obtenues par chacun des arbres. Pour la prédiction d'un
+nouvel échantillon, la prédiction est celle obtenue par la majorité des
+arbres.
+
+\emph{Références} :
+
+\begin{itemize}
+\item
+  Breiman, L., Friedman, J., Olshen, R., Stone, C., 1984. Classification
+  and Regression Tree, Wadsworth International. California.
+\item
+  Breiman, L., 2001. Random Forests. Mach. Learn. 45, 5--32.
+\item
+  Chauhan, N., 2019. Decision Tree Algorithm --- Explained {[}WWW
+  Document{]}. Data Sci. URL
+  \url{https://towardsdatascience.com/decision-tree-algorithm}
+  explained-83beb6e78ef4
+\end{itemize}
+
+\hypertarget{mise-en-place-de-random-forest-sous-r.}{%
+\subsubsection{Mise en place de Random Forest sous
+R.}\label{mise-en-place-de-random-forest-sous-r.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(kernlab)}
+
+\CommentTok{\# traindata : jeu de données d\textquotesingle{}entraînements}
+\CommentTok{\# test\_select : jeu de données de validation}
+
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/testdata.Rdata"}\NormalTok{)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/traindata.Rdata"}\NormalTok{)}
+
+
+\CommentTok{\#  RECHERCHE DES PARAMETRES OPTIMAUX}
+
+\DocumentationTok{\#\#  CREATION D\textquotesingle{}UNE PARAMETRISATION EXTENSION DE CARET (CODE SP)}
+\NormalTok{customRF }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{type=}\StringTok{"Classification"}\NormalTok{, }\CommentTok{\# On réalise une classification}
+                 \AttributeTok{library=}\StringTok{"randomForest"}\NormalTok{, }\CommentTok{\# On va réaliser du random forest}
+                 \AttributeTok{loop=}\ConstantTok{NULL}\NormalTok{)}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{parameters }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{parameter=}\FunctionTok{c}\NormalTok{(}\StringTok{"mtry"}\NormalTok{, }\StringTok{"ntree"}\NormalTok{), }\AttributeTok{class=}\FunctionTok{rep}\NormalTok{(}\StringTok{"numeric"}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{label=}\FunctionTok{c}\NormalTok{(}\StringTok{"mtry"}\NormalTok{, }\StringTok{"ntree"}\NormalTok{))}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{grid }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y, }\AttributeTok{len=}\ConstantTok{NULL}\NormalTok{, }\AttributeTok{search=}\StringTok{"grid"}\NormalTok{) \{\}}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{fit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y, wts, param, lev, last, weights, classProbs, ...) \{}
+  \FunctionTok{randomForest}\NormalTok{(x, y, }\AttributeTok{mtry =}\NormalTok{ param}\SpecialCharTok{$}\NormalTok{mtry, }\AttributeTok{ntree=}\NormalTok{param}\SpecialCharTok{$}\NormalTok{ntree, ...)}
+\NormalTok{\}}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{predict }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(modelFit, newdata, }\AttributeTok{preProc =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{submodels =} \ConstantTok{NULL}\NormalTok{)}
+  \FunctionTok{predict}\NormalTok{(modelFit, newdata)}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{prob }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(modelFit, newdata, }\AttributeTok{preProc =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{submodels =} \ConstantTok{NULL}\NormalTok{)}
+  \FunctionTok{predict}\NormalTok{(modelFit, newdata, }\AttributeTok{type =} \StringTok{"prob"}\NormalTok{)}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{sort }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) x[}\FunctionTok{order}\NormalTok{(x[,}\DecValTok{1}\NormalTok{]),]}
+\NormalTok{customRF}\SpecialCharTok{$}\NormalTok{levels }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) x}\SpecialCharTok{$}\NormalTok{classes}
+
+\DocumentationTok{\#\#  CREATION DE LA GRILLE DE PARAMETRISATION ET METHODE POUR TROUVER LES PARAMETRES OPTIMAUX}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{111}\NormalTok{) }\CommentTok{\# on fixe la seed}
+\NormalTok{metric }\OtherTok{\textless{}{-}} \StringTok{"Accuracy"}
+\CommentTok{\# Comme pour SVM, on précise les}
+\NormalTok{control }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method=}\StringTok{"repeatedcv"}\NormalTok{, }\AttributeTok{number=}\DecValTok{10}\NormalTok{, }\AttributeTok{repeats=}\DecValTok{3}\NormalTok{, }\AttributeTok{search =} \StringTok{"grid"}\NormalTok{)}
+\NormalTok{tunegrid }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{.mtry=}\FunctionTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{15}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{25}\NormalTok{), }\CommentTok{\# nombre de variable utilisé par noeud}
+                        \AttributeTok{.ntree=}\FunctionTok{c}\NormalTok{(}\DecValTok{500}\NormalTok{,}\DecValTok{1000}\NormalTok{,}\DecValTok{1500}\NormalTok{,}\DecValTok{2000}\NormalTok{)) }\CommentTok{\# nombre d\textquotesingle{}arbre dans la forêt}
+
+\DocumentationTok{\#\# AJUSTEMENT DU MODELE DE RF}
+
+\CommentTok{\# custom\_rf \textless{}{-} train(y\textasciitilde{}., data=traindata, method=customRF, metric=metric, tuneGrid=tunegrid, trControl=control)}
+
+
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file =} \StringTok{"ML/PartieApplications/RF/2019{-}04{-}29\_model\_RF\_TFEN10RECV90NORM.RData"}\NormalTok{)}
+
+\CommentTok{\# PARAMETRES DU MODELE AJUSTE}
+\NormalTok{custom\_rf}\SpecialCharTok{$}\NormalTok{bestTune}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%    mtry ntree
+% 12   15  2000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(custom\_rf)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Learning_R_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# EVALUATION DES PERFORMANCES DE ML}
+\FunctionTok{summary}\NormalTok{(custom\_rf)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%                 Length Class      Mode     
+% call                 5 -none-     call     
+% type                 1 -none-     character
+% predicted        88353 factor     numeric  
+% err.rate         14000 -none-     numeric  
+% confusion           42 -none-     numeric  
+% votes           530118 matrix     numeric  
+% oob.times        88353 -none-     numeric  
+% classes              6 -none-     character
+% importance          60 -none-     numeric  
+% importanceSD         0 -none-     NULL     
+% localImportance      0 -none-     NULL     
+% proximity            0 -none-     NULL     
+% ntree                1 -none-     numeric  
+% mtry                 1 -none-     numeric  
+% forest              14 -none-     list     
+% y                88353 factor     numeric  
+% test                 0 -none-     NULL     
+% inbag                0 -none-     NULL     
+% xNames              60 -none-     character
+% problemType          1 -none-     character
+% tuneValue            2 data.frame list     
+% obsLevels            6 -none-     character
+% param                0 -none-     list
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#  PERFORMANCE DU MODELE SUR JEU DE DONNEES D\textquotesingle{}ENTRAINEMENT}
+\CommentTok{\# rf.predictions=predict(custom\_rf, newdata=traindata)}
+\CommentTok{\# save(file="ML/PartieApplications/RF/Pred\_train.Rdata",rf.predictions)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/RF/Pred\_train.Rdata"}\NormalTok{)}
+\NormalTok{perf\_custom\_rf\_traindata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{rf.predictions,}\AttributeTok{reference=}\NormalTok{traindata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\DocumentationTok{\#\# PERFORMANCE DES DIFFERENTS MODELES TESTES PAR VALIDATION CROISEE}
+
+\NormalTok{perf\_custom\_rf\_cv }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(custom\_rf}\SpecialCharTok{$}\NormalTok{results, mtry }\SpecialCharTok{==}\NormalTok{ custom\_rf}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{mtry }\SpecialCharTok{\&}\NormalTok{ ntree }\SpecialCharTok{==}\NormalTok{ custom\_rf}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{ntree, }\FunctionTok{c}\NormalTok{(}\StringTok{"Accuracy"}\NormalTok{, }\StringTok{"Kappa"}\NormalTok{))}
+
+\DocumentationTok{\#\#  EVALUATION DE LA QUALITE DU MODELE AVEC LE JEU DE DONNEES }\AlertTok{TEST}
+\CommentTok{\# rf.predictions=predict(custom\_rf, newdata=testdata)}
+\CommentTok{\# save(file="ML/PartieApplications/RF/Pred\_test.Rdata",rf.predictions)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/RF/Pred\_test.Rdata"}\NormalTok{)}
+\NormalTok{perf\_custom\_rf\_testdata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{rf.predictions,}\AttributeTok{reference=}\NormalTok{testdata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{mat\_conf\_rf }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(perf\_custom\_rf\_testdata}\SpecialCharTok{$}\NormalTok{table)}
+\NormalTok{metric\_overall\_rf }\OtherTok{\textless{}{-}}\NormalTok{ perf\_custom\_rf\_testdata}\SpecialCharTok{$}\NormalTok{overall}
+\NormalTok{metric\_byClass\_rf }\OtherTok{\textless{}{-}}\NormalTok{ perf\_custom\_rf\_testdata}\SpecialCharTok{$}\NormalTok{byClass}
+\NormalTok{metric\_byClass\_rf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%                        Sensitivity Specificity Pos Pred Value Neg Pred Value
+% Class: Grazing           0.9998080   0.9986395      0.9988493      0.9997730
+% Class: Lying - None      1.0000000   0.9972127      0.9856665      1.0000000
+% Class: Lying - Rum       0.9953380   0.9993841      0.9966656      0.9991379
+% Class: Standing - None   0.9681580   0.9995555      0.9933830      0.9978092
+% Class: Standing - Rum    0.9922680   1.0000000      1.0000000      0.9995023
+% Class: Walking           0.9607535   0.9998943      0.9935065      0.9993397
+%                        Precision    Recall        F1 Prevalence Detection Rate
+% Class: Grazing         0.9988493 0.9998080 0.9993284 0.54153023     0.54142627
+% Class: Lying - None    0.9856665 1.0000000 0.9927815 0.16084516     0.16084516
+% Class: Lying - Rum     0.9966656 0.9953380 0.9960013 0.15608919     0.15536151
+% Class: Standing - None 0.9933830 0.9681580 0.9806083 0.06447840     0.06242528
+% Class: Standing - Rum  1.0000000 0.9922680 0.9961190 0.06050211     0.06003431
+% Class: Walking         0.9935065 0.9607535 0.9768555 0.01655491     0.01590519
+%                        Detection Prevalence Balanced Accuracy
+% Class: Grazing                   0.54205000         0.9992238
+% Class: Lying - None              0.16318416         0.9986063
+% Class: Lying - Rum               0.15588128         0.9973610
+% Class: Standing - None           0.06284110         0.9838568
+% Class: Standing - Rum            0.06003431         0.9961340
+% Class: Walking                   0.01600915         0.9803239
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#  ANALYSE DE L\textquotesingle{}IMPORTANCE DES VARIABLES}
+
+\NormalTok{rf.varImp }\OtherTok{\textless{}{-}} \FunctionTok{varImp}\NormalTok{(custom\_rf, }\AttributeTok{scale=}\ConstantTok{TRUE}\NormalTok{)}
+\DocumentationTok{\#\# Classement par ordre d\textquotesingle{}importance global}
+\NormalTok{imp\_globale }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{apply}\NormalTok{(rf.varImp}\SpecialCharTok{$}\NormalTok{importance, }\DecValTok{1}\NormalTok{,}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))\}), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{)}
+\DocumentationTok{\#\# Variables les plus discriminantes pour les comportements les plus durs à discriminer}
+\NormalTok{imp\_standing\_none }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name =} \FunctionTok{rownames}\NormalTok{(rf.varImp}\SpecialCharTok{$}\NormalTok{importance), }\AttributeTok{imp =}\NormalTok{ rf.varImp}\SpecialCharTok{$}\NormalTok{importance}\SpecialCharTok{$}\NormalTok{Standing...None)}
+\NormalTok{imp\_standing\_none }\OtherTok{\textless{}{-}}\NormalTok{ imp\_standing\_none[}\FunctionTok{order}\NormalTok{(imp\_standing\_none}\SpecialCharTok{$}\NormalTok{imp, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),]}
+\NormalTok{top\_20\_standing\_none  }\OtherTok{\textless{}{-}}\NormalTok{ imp\_standing\_none[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\StringTok{"name"}\NormalTok{]}
+
+\NormalTok{imp\_walking }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{name =} \FunctionTok{rownames}\NormalTok{(rf.varImp}\SpecialCharTok{$}\NormalTok{importance), }\AttributeTok{imp =}\NormalTok{ rf.varImp}\SpecialCharTok{$}\NormalTok{importance}\SpecialCharTok{$}\NormalTok{Walking)}
+\NormalTok{imp\_walking }\OtherTok{\textless{}{-}}\NormalTok{ imp\_walking[}\FunctionTok{order}\NormalTok{(imp\_walking}\SpecialCharTok{$}\NormalTok{imp, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),]}
+\NormalTok{top\_20\_walking  }\OtherTok{\textless{}{-}}\NormalTok{ imp\_walking[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{,}\StringTok{"name"}\NormalTok{]}
+
+\CommentTok{\#  GENERER LES RESULTATS}
+\CommentTok{\# save(mat\_conf\_rf, file = "ML/PartieApplications/RF/mat\_conf\_rf.RData")}
+\CommentTok{\# save(metric\_overall\_rf, file = "ML/PartieApplications/RF/metric\_overall\_rf.RData")}
+\CommentTok{\# save(metric\_byClass\_rf, file = "ML/PartieApplications/RF/metric\_byClass\_rf.RData")}
+\CommentTok{\# write.table(rf.varImp$importance, file = "ML/PartieApplications/RF/varImp.rf.csv", dec = ".", sep = ";")}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{adaboost}{%
+\subsection{AdaBoost}\label{adaboost}}
+
+Il s'agit d'une méthode ensembliste de machine learning utilisée pour
+des problèmes de classification supervisée. Il s'agit d'un
+méta-alogirthme de boosting qui utilise généralement un arbre de
+décision comme classifieur faible. Le principe est de booster
+successivement les performances de classifieurs faibles en donnant plus
+de poids aux échantillons mals classés par le classifieur courant. Il
+peut prendre en compte toutes les sorties des classifieurs faibles avec
+une pondération qui dépend des perofrmances respectives dans la décision
+finale prise par le classifieur fort.
+
+\hypertarget{fonctionnement-de-lalgorithme-1}{%
+\subsubsection{Fonctionnement de
+l'algorithme}\label{fonctionnement-de-lalgorithme-1}}
+
+\hypertarget{etape-1-identification-du-premier-classifieur-faible}{%
+\paragraph{Etape 1 : Identification du premier classifieur
+faible}\label{etape-1-identification-du-premier-classifieur-faible}}
+
+Soit T le nombre maxiumum d'itérations, et t=1 la première itération.
+Adaboost commence par identifier un premier classifieur faible noté
+\(h_{t=1}\), un arbre de décision constitué uniquement de deux feuilles
+(``\textbf{stump}'') qui divise le jeu de données en groupes les plus
+homogènes possibles. Pour cette première étape, on considère que chaque
+échantillon a rigourement la même importance (i.e., le même poids), dans
+le calcul de l'erreur de classification. D'un point de vue
+algorithmique, cela revient à trouver \(h_{t=1}\) qui minimise l'erreur
+de classification notée \(\epsilon_{t=1}\).
+
+On peut alors définir :
+
+\begin{center}
+  $h_{t=1}=argming(\epsilon_{t=1})$
+  
+  $\epsilon_{t=1}=\sum^n_{i=1}w_{t=1}(i)[y_i\ne h_{t=1}(X_{i1},X_{i2})]$
+\end{center}
+
+avec
+
+\begin{itemize}
+\item
+  \(w_{t=1}(i)=\frac{1}{n}\), le poids affecté à tout échantillon i du
+  jeu de données à t=1
+\item
+  \(y_i\ne h_{t=1}(X_{i1},X_{i2})\) : qui vaut 1 si le comportement
+  obtenu avec \(h_{t=1}\) pour l'échantillon i à partir des variables
+  \((X_{i1},X_{i2})\) doffère du comportement observé \(y_1\), 0 sinon.
+\end{itemize}
+
+Remarque : Par définition, un classifieur faible doit résulter sur une
+erreur de classification strictement inférieure à celle qui aurait été
+obtenue par hasard (\(\epsilon_t\) \textless{} 0.5 dans ce cas
+particulier). L'algorithme s'arrêtera si aucun classifieur satisfaisant
+cette condition n'a pu être trouvé.
+
+\hypertarget{etape-2-calcul-et-mise-uxe0-jour-des-poids.}{%
+\paragraph{Etape 2 : Calcul et mise à jour des
+poids.}\label{etape-2-calcul-et-mise-uxe0-jour-des-poids.}}
+
+On Calcule alors le poids du classifier \(h_{t=1}\), notée:
+
+\begin{center}
+$\alpha_{t=1}=\frac{1}{2}log(\frac{1-\epsilon_{t=1}}{\epsilon_{t=1}})$. 
+\end{center}
+
+\(\alpha_{t=1}\) sera d'autant plus élevé que le classifieur est
+performant, c'est-à-dire qu'il minimise l'erreur \(\epsilon_t\). On met
+alors à jour le poids de chaque échantillon i du jeu de données, noté
+\$w\_\{t=2\}(i) pour la deuxième itération :
+
+\begin{center}
+$w_{t=2}(i)=\frac{w_{t=1}(i)e^{-\alpha_{t=1}y_ih_{t=1}(X_{i1},X_{i2})}}{Z_{t=1}}$
+\end{center}
+
+avec \(Z_{t=1}\) le facteur de normalisation qui garantit que la somme
+des poids sur i vaut 1. Du coup
+\(Z_{t=1}=2\sqrt{\epsilon_{t=1}(1-\epsilon_{t=1})}\). Pour chacun des
+échantillons i, il y a deux cas possibles :
+
+\begin{itemize}
+\item
+  L'échantillon i est bien classé \(y_ih_{t=1}(X_{i1},X_{i2})=1\), alors
+  \(f(\alpha_{t=1})=e^{-\alpha_{t=1}y_ih_{t=1}(X_{i1},X_{i2})}\). Si
+  l'échantillon est bien classé, le nouveau poids pour cet échantillon
+  sera d'autant plus faible que le classifieur \(h_{t=1}\) est
+  performant (i.e.~que \(\alpha_{t=1}\) est élevé)
+\item
+  L'échantillon i est mal classé \(y_ih_{t=1}(X_{i1},X_{i2})=-1\), alors
+  \(f(\alpha_{t=1})=e^{-\alpha_{t=1}y_ih_{t=1}(X_{i1},X_{i2})}\). Si
+  l'échantillon est mal classé, le nouveau poids pour cet échantillon
+  sera d'autant plus fort que le classifieur \(h_{t=1}\) est performant
+  (i.e.~que \(\alpha_{t=1}\) est élevé)
+\end{itemize}
+
+Les poids \(w_{t=2}\) les plus élevés seront affectés aux échantillons
+qui sont mal classés par le classifieur \(h_{t=1}\).
+
+\hypertarget{etape-3-identification-du-second-classifieur-faible}{%
+\paragraph{Etape 3 : Identification du second classifieur
+faible}\label{etape-3-identification-du-second-classifieur-faible}}
+
+A l'itération t=2, un second classifieur faible noté \(h_{t=2}\) qui
+minimise l'erreur de classification \(\epsilon_{t=2}\). On définit alors
+l'erreur de classification :
+
+\begin{center}
+  $\epsilon_{t=2}=\sum_{i=1}^nw_{t=2}(i)[y_i\ne h_{t=2}(X_{i1},X_{i2})]$
+\end{center}
+
+On peut noter que \(w_{t=2}(i)>\frac{1}{n}\) si l'échentillon était mal
+classé à la première itération. On reconduit ensuite les étapes 2 et 3
+de façon itératirve jusqu'à ce que t=T, le nombre maximal d'itération,
+ou que l'amélioriation ne soit lié qu'au hasard.
+
+\hypertarget{etape-4-duxe9finition-du-classifieur-fort}{%
+\paragraph{Etape 4 : Définition du classifieur
+fort}\label{etape-4-duxe9finition-du-classifieur-fort}}
+
+Un classifieur fort est obtenu à l'issue des T itérations
+\(H_{X_1,X_2}\) :
+
+\begin{center}
+  $H_{X_1,X_2}=signe(\sum_{t=1}^T\alpha_th_t(X_1,X_2))$
+\end{center}
+
+On utilise la comme de chacun des sorties des classifieurs faibles (+1
+ou -1), en affectant un poids plus ou moins fort selon la performance du
+classifieur. Pour prédire le comportement d'un nouvel échantillon i, on
+utilise donc un vote pondérée sur les décisions de chacun des classieurs
+faibles.
+
+\emph{Références} :
+
+\begin{itemize}
+\tightlist
+\item
+  Fabien, M., 2019. Boosting and AdaBoost clearly explained {[}WWW
+  Document{]}. Data Sci.
+  \url{https://towardsdatascience.com/boosting-and-adaboost-clearly-explained-856e21152d3e}
+\end{itemize}
+
+\hypertarget{mise-en-place-sous-r-1}{%
+\subsubsection{Mise en place sous R}\label{mise-en-place-sous-r-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(kernlab)}
+
+\CommentTok{\# traindata : jeu de données d\textquotesingle{}entraînements}
+\CommentTok{\# test\_select : jeu de données de validation}
+
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/testdata.Rdata"}\NormalTok{)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file=}\StringTok{"ML/PartieApplications/SVM/traindata.Rdata"}\NormalTok{)}
+
+
+\CommentTok{\#  RECHERCHE DES PARAMETRES OPTIMAUX}
+
+\DocumentationTok{\#\#  CREATION DE LA GRILLE DE PARAMETRISATION ET METHODE POUR TROUVER LES PARAMETRES OPTIMAUX}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{111}\NormalTok{)}
+\NormalTok{metric }\OtherTok{\textless{}{-}} \StringTok{"Accuracy"}
+\NormalTok{control }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method=}\StringTok{"repeatedcv"}\NormalTok{, }\AttributeTok{number=}\DecValTok{10}\NormalTok{, }\AttributeTok{repeats=}\DecValTok{3}\NormalTok{, }\AttributeTok{search=}\StringTok{"grid"}\NormalTok{, }\AttributeTok{allowParallel=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{tunegrid }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{mfinal=}\FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{150}\NormalTok{), }\AttributeTok{maxdepth=}\FunctionTok{c}\NormalTok{(}\DecValTok{10}\SpecialCharTok{:}\DecValTok{30}\NormalTok{))}
+
+\DocumentationTok{\#\#  AJUSTEMENT DU MODELE ADABOOST}
+
+\CommentTok{\# adaboost.fit \textless{}{-} train(y\textasciitilde{}., data=traindata, method="AdaBag", metric=metric, tuneGrid=tunegrid, trControl=control)}
+\FunctionTok{load}\NormalTok{(}\AttributeTok{file =} \StringTok{"ML/PartieApplications/Ada/2019{-}04{-}22\_model\_ADABOOST\_TFEN10RECV90NORM.RData"}\NormalTok{)}
+
+\DocumentationTok{\#\#  PARAMETRES DU MODELE AJUSTE}
+\NormalTok{adaboost.fit}\SpecialCharTok{$}\NormalTok{bestTune}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%    mfinal maxdepth
+% 40    150       29
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(adaboost.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Learning_R_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# EVALUATION DES PERFORMANCES DE ML}
+\FunctionTok{summary}\NormalTok{(adaboost.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+%             Length   Class      Mode     
+% formula            3 formula    call     
+% trees            150 -none-     list     
+% votes         530118 -none-     numeric  
+% prob          530118 -none-     numeric  
+% class          88353 -none-     character
+% samples     13252950 -none-     numeric  
+% importance        60 -none-     numeric  
+% terms              3 terms      call     
+% call               6 -none-     call     
+% xNames            60 -none-     character
+% problemType        1 -none-     character
+% tuneValue          2 data.frame list     
+% obsLevels          6 -none-     character
+% param              1 -none-     list
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# PERFORMANCE DU MODELE SUR JEU DE DONNEES D\textquotesingle{}ENTRAINEMENT}
+\CommentTok{\# ada.predictions=predict(adaboost.fit, newdata=traindata)}
+\CommentTok{\# save(file="ML/PartieApplications/Ada/Pred\_train.Rdata",ada.predictions)}
+\FunctionTok{load}\NormalTok{(}\StringTok{"ML/PartieApplications/Ada/Pred\_train.Rdata"}\NormalTok{)}
+\NormalTok{perf\_adaboost\_fit\_traindata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{ada.predictions,}\AttributeTok{reference=}\NormalTok{traindata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\DocumentationTok{\#\#  PERFORMANCE DES DIFFERENTS MODELES TESTES PAR VALIDATION CROISEE}
+
+\NormalTok{perf\_ada\_fit\_cv }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(adaboost.fit}\SpecialCharTok{$}\NormalTok{results, mfinal }\SpecialCharTok{==}\NormalTok{ adaboost.fit}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{mfinal }\SpecialCharTok{\&}\NormalTok{ maxdepth }\SpecialCharTok{==}\NormalTok{ adaboost.fit}\SpecialCharTok{$}\NormalTok{bestTune}\SpecialCharTok{$}\NormalTok{maxdepth, }\FunctionTok{c}\NormalTok{(}\StringTok{"Accuracy"}\NormalTok{, }\StringTok{"Kappa"}\NormalTok{))}
+
+\DocumentationTok{\#\#  EVALUATION DE LA QUALITE DU MODELE AVEC LE JEU DE DONNEES }\AlertTok{TEST}
+\CommentTok{\# ada.predictions=predict(adaboost.fit, newdata=testdata)}
+\CommentTok{\# save(file="ML/PartieApplications/Ada/Pred\_test.Rdata",ada.predictions)}
+\FunctionTok{load}\NormalTok{(}\StringTok{"ML/PartieApplications/Ada/Pred\_test.Rdata"}\NormalTok{)}
+\NormalTok{perf\_adaboost\_fit\_testdata }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(}\AttributeTok{data=}\NormalTok{ada.predictions,}\AttributeTok{reference=}\NormalTok{testdata}\SpecialCharTok{$}\NormalTok{y,}\AttributeTok{positive=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{mat\_conf\_ada }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(perf\_adaboost\_fit\_testdata}\SpecialCharTok{$}\NormalTok{table)}
+\NormalTok{metric\_overall\_ada }\OtherTok{\textless{}{-}}\NormalTok{ perf\_adaboost\_fit\_testdata}\SpecialCharTok{$}\NormalTok{overall}
+\NormalTok{metric\_byClass\_ada }\OtherTok{\textless{}{-}}\NormalTok{ perf\_adaboost\_fit\_testdata}\SpecialCharTok{$}\NormalTok{byClass}
+
+\CommentTok{\# ANALYSE DE L\textquotesingle{}IMPORTANCE DES VARIABLES}
+
+\NormalTok{ada.varImp }\OtherTok{\textless{}{-}} \FunctionTok{varImp}\NormalTok{(adaboost.fit, }\AttributeTok{scale=}\ConstantTok{TRUE}\NormalTok{)}
+\DocumentationTok{\#\# Classement par ordre d\textquotesingle{}importance global}
+\NormalTok{imp\_globale }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{apply}\NormalTok{(ada.varImp}\SpecialCharTok{$}\NormalTok{importance, }\DecValTok{1}\NormalTok{,}\ControlFlowTok{function}\NormalTok{(x)\{}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))\}), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\# GENERER LES RESULTATS}
+
+\FunctionTok{save}\NormalTok{(mat\_conf\_ada, }\AttributeTok{file =} \StringTok{"ML/PartieApplications/Ada/mat\_conf\_ada.RData"}\NormalTok{)}
+\FunctionTok{save}\NormalTok{(metric\_overall\_ada, }\AttributeTok{file =} \StringTok{"ML/PartieApplications/Ada/metric\_overall\_ada.RData"}\NormalTok{)}
+\FunctionTok{save}\NormalTok{(metric\_byClass\_ada, }\AttributeTok{file =} \StringTok{"ML/PartieApplications/Ada/metric\_byClass\_ada.RData"}\NormalTok{)}
+\FunctionTok{write.table}\NormalTok{(ada.varImp}\SpecialCharTok{$}\NormalTok{importance, }\AttributeTok{file =} \StringTok{"ML/PartieApplications/Ada/varImp.ada.csv"}\NormalTok{, }\AttributeTok{dec =} \StringTok{"."}\NormalTok{, }\AttributeTok{sep =} \StringTok{";"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{extreme-gradient-boosting-xgx}{%
+\subsection{eXtreme Gradient Boosting
+(XGX)}\label{extreme-gradient-boosting-xgx}}
+
+Il s'agit d'un algorithme de machine learning inspiré de la technique de
+\textbf{Gradient Boosting} qui utilise généralement un arbre de décision
+comme classifieur faible. L'idée du \textbf{Gradient Boosting} a été
+proposée par Leo Breiman en 1997 puis développée par Jérôme H. Friedman
+en 1999. le principe du gradient boosting est de régresser itérativement
+un ensemble de classivieur faible (comme des arbres de décisions) sur
+les érisdus obtenus avec l'arbre précédent. La valeur alors associée à
+chacune des feuilles est celle qui minimise une fonction de coût
+spécifique à cet algorithme. Il prend en compte toutes les sorties des
+classifieurs faibles pour prédire la classe associée à un nouvel
+échantillon, chacun étant pondéré par un paramètre d'apprentissage.
+
+\hypertarget{fonctionnement-de-lalgorithme-2}{%
+\subsubsection{Fonctionnement de
+l'algorithme}\label{fonctionnement-de-lalgorithme-2}}
+
+On considère un jeu de données à laquelle chacun des échantillons est
+associée à une variable \(y_i\) qui a pour valeur possible 0 et 1
+(variable bimodale). Soit \(p\) la probabilité que cette variable prenne
+la valeur 1. On définit alors les odds-ratio, notée odds, de la façon
+suivante :
+
+\begin{center}
+  $odds=\frac{p}{1-p}$
+  
+  $p=\frac{e^{log(odds)}}{1+e^{log(odds)}}$
+\end{center}
+
+On pose alors \(F(x_i)=log(odds)\). On peut alors définir la fonction de
+coût \[L(y_i,F(x_i))\], définie pour un échantillon \(y_i\) de la
+manière suivante :
+
+\begin{center}
+    $L(y_i,F(x_i))=-y_iF(x_i)+log(1+e^{F(x_i)})$
+\end{center}
+
+On peut alors démontrer que :
+
+\begin{center}
+    $L(y_i,F(x_i))=-[y_ilog(p)+(1-y_i) \times log(1-p)]$
+\end{center}
+
+\hypertarget{etape-1-initialisation}{%
+\paragraph{Etape 1 : Initialisation}\label{etape-1-initialisation}}
+
+On commence par initialise le modèle avec une valeur constante
+\(F_0(x)\) définie de la manière suivante :
+
+\begin{center}
+  $F_0(x)=argmin_\gamma \sum_{i=1}^nL(y_i,\gamma)$
+\end{center}
+
+Avec \(\gamma=log(odds)\). Cela revient donc à trouver la valeur de
+\(\gamma\) pour laquelle la fonction de coût est minimale, soit la
+valeur de \(\gamma\) pour laquelle la dérivée s'annule. On calcule donc
+cette dérivée :
+
+\begin{center}
+$\frac{d}{dlog(odds)}(\sum_{i=1}^nL(y_i,\gamma))$
+
+$=\frac{d}{dlog(odds)}(\sum^n_{i=1}[-y_ilog(odds)+log(1+e^{log(odds)})])$
+
+$=\sum^n_{i=1}[-y_i+p]$
+\end{center}
+
+La première étape de l'algorithme consiste donc à trouver la valeur
+\(\gamma=log(odds)\) pour laquelle \(\sum^n_{i=1}[-y_i+p]=0\). On peut
+donc trouver \(p\), puis \(\gamma\) par sa relation avec \(p\). Pour sa
+suite, on notera cette valeur \(\gamma_0\). Le modèle initialisé est
+donc la création d'un arbre composé d'une seuile feuille qui prédit que
+le logarithme du odds ratio associé à l'événement \(y_i=1\). On a donc
+\(F_0(x)=\gamma_0\)
+
+\hypertarget{etape-2-coeur-de-lalgorithme}{%
+\paragraph{Etape 2 : Coeur de
+l'algorithme}\label{etape-2-coeur-de-lalgorithme}}
+
+Soir \(m\), le numéro de l'itération.
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\tightlist
+\item
+  On commence par calculer la \(r_{im}\) :
+\end{enumerate}
+
+\begin{center} 
+
+  $r_{im}= -[\frac{\delta L(y_i,F(x_i))}{\delta F(x_i)}]_{F(x)=F_{m-1}(x)}$
+
+\end{center}
+
+qui calcule la dérivée de la fonction de coût par rapport à chaque
+\(F(x_i)=log(odds)\) pour chaque échantillon i. \(F(x)=F_{m-1}(x)\)
+indique que le calcul de la dérivée se fait uniquement avec les
+\(F(x_i)\) obtenus à l'étape précédente.
+
+On a donc alors pour tout échantillon i et à l'itération m :
+
+\begin{center}
+  $r_{im}=- \frac{d}{dlog(odds)}(L(y_i,F(x_i)))$
+  
+  $r_{im}= - [y_i+\frac{e^{log(odds)}}{1+e^{log(odds)}}]$
+  
+  $r_{im}= - [-y_i + p]$
+  
+  $r_{im} = [y_i -p]$
+\end{center}
+
+\(r_{im}\) représente les pseudo résidus. On peut ici faire une analogie
+avec les moindres carrés en régression linéaire où le résidu est la
+différence entre la valeur observée et la valeur prédite. Calculer
+\(r_{im}\) revient donc à calculer les pseudos résidus de chaque
+échantillon i pour l'itération m.
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  On ajuste alors un arbre de régression aux pseudos-résidus \(r_{im}\)
+  et crée des feuilles terminales \(R_{jm}\) pour chaque feuille j
+  \(\in [1,J_m]\).
+\item
+  Pour chaque valeur de \(j\) (i.e.~chaque feuile \(R_{jm}\) de l'arbre
+  créé à l'itération m), on calcule alors \(\gamma_{jm}\) :
+\end{enumerate}
+
+\begin{center}
+  $\gamma_{jm}=argmin_{\gamma}\sum_{x_j \in R_{ij}}L(y_i,F_{m-1}(x_i)+\gamma)$
+\end{center}
+
+avec \(\gamma_{jm}\) qui correspond à la valeur \(\gamma\) qui minimise
+\(\sum_{x_j \in R_{ij}}L(y_i,F_{m-1}(x_i)+\gamma)\). On cherche donc
+pour chacune des feuilles de l'arbre créé précédemment la valeur
+\(\gamma\) qui minimise
+\(\sum_{x_j \in R_{ij}}L(y_i,F_{m-1}(x_i)+\gamma)\). En remplaçant par
+l'expression de la fonction de coût, on obtient :
+
+\begin{center}
+  $\sum_{x_j \in R_{ij}}L(y_i,F_{m-1}(x_i)+\gamma)$
+  
+  $=\sum_{x_j \in R_{ij}}[-y_i \times (F_{m-1}(x_i)+ \gamma)+log(1+e^{F_{m-1}(x_i)+\gamma})]$
+\end{center}
+
+Trouver le minimum de cette expression en \(\gamma\) nécessite
+d'approximer \(L(y_i,F_{m-1}(x_i)+\gamma)\) avec un polynôme de Taylor
+du second ordre puis de dériver l'expression obtenue. La valeur
+\(\gamma\) recherchée correspond à celle pour laquelle la dérivée
+s'annule. A l'issue de cette étape, on démontre que :
+
+\begin{center}
+  $\gamma_{jm}=\frac{\sum_{x_j \in R_{ij}}[y_i-\frac{e^{log(odds)}}{1+e^{log(odds)}}]}{\sum_{x_j \in R_{ij}}p_i(1-p_i)}$
+  
+  $\gamma_{jm}=\frac{\sum_{x_j \in R_{ij}}[y_i-p_i]}{\sum_{x_j \in R_{ij}}p_i(1-p_i)}$
+  
+  $\gamma_{jm}=\frac{\sum_{x_j \in R_{ij}}r_{im}}{\sum_{x_j \in R_{ij}}p_i(1-p_i)}$
+\end{center}
+
+avec \(p_i=p(x_i)\), la probabilité que \(y_i=1\) pour l'échantillon i.
+Calculer la valeur de \(\gamma\) assocée à chacune des feuilles
+\(R_{jm}\) revient donc à calcumer \(\gamma_{jm}\) pour chacune d'elle,
+telle que défini en dernière ligne.
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  On peut alors mettre à jour \(F_m(x_i)\) pour tout échantillon i :
+\end{enumerate}
+
+\begin{center}
+   $F_m(x_i)=F_{m-1}(x_i)+ \nu \sum_{j=1}^{J_m}\gamma_{jm}I(X_i \in R_{jm})$
+\end{center}
+
+avec :
+
+\begin{itemize}
+\item
+  \(F_m(x_i)\) le log(odds) obtenu à partir de l'arbre construit à
+  l'itération m pour un échantillon i associé aux variablex \(x_i\)
+\item
+  \$F\_\{m-1\}(x\_i) \$le log(odds) obtenu à partir de l'arbre construit
+  à l'itération m-1 pour un échantillon i associé aux variablex \(x_i\)
+\end{itemize}
+
+-\(\nu\) le paramètre d'apprentissage
+
+-\(I(X_i \in R_{jm})\) la valeur de la feuille \(R_{jm}\). Elle vaut 1
+si \(x_i \in R_{jm}\), 0 sinon.
+
+Les probabilités associées à \(F_m(x_i)\) sont également calculées et
+mises à jour.
+
+On répète alors A, B, C et D jusqu'à ce que m=M ou que les résidus
+obtenus convergent vers 0.
+
+\hypertarget{etape-3-obtentiion-du-classifieur-fort-en-sortie-de-lalgorithme}{%
+\paragraph{Etape 3 : Obtentiion du classifieur fort en sortie de
+l'algorithme}\label{etape-3-obtentiion-du-classifieur-fort-en-sortie-de-lalgorithme}}
+
+A la fin de l'étape 2, on obtient donc le classifieur fort noté
+\(F_M(x)\) :
+
+\begin{center}
+   $F_M(x_i)=F_{M-1}(x_i)+ \nu \sum_{j=1}^{J_M}\gamma_{jM}I(X_i \in R_{jM})$
+\end{center}
+
+Ce classifieur pourra par la suite être utilisé pour prédite la
+probabilité qu'un nouvel échantillon i réalise l'évènement \(y_i=1\).
+
+\hypertarget{cas-particulier-de-lextreme-gradient-boosting}{%
+\paragraph{Cas particulier de l'eXtreme Gradient
+Boosting}\label{cas-particulier-de-lextreme-gradient-boosting}}
+
+L'algorithme XGX repose sur l'algorithle de gradient boosting,
+c'est-à-dire une régression itérative des arbres de décision sur les
+résidus obtenus avec l'arbre précédent.
+
+Les principales différences reposent sur :
+
+\begin{itemize}
+
+   \item a construction de l’arbre à chaque étape m. Contrairement au gradient boosting, l’arbre construit à chaque étape est unique : il s’agit de celui qui s’ajuste le mieux aux résidus. Pour trouver cet arbre, plusieurs étapes sont réalisées :
+   
+   \begin{enumerate}
+   
+      \item Une seule partie des échantillons et des variables est sélectionnée aléatoirement à chaque étape m. Ce sous-jeu de données sera celui utilisé pour construire l’arbre de régression à l’itération m. Le ratio de variables et le ratio des échantillons sont fixés par l’utilisateur
+      
+      \item Pour chacun des noeuds de l’arbre de régression potentiel, on calcule le score de similarité de la manière suivante, en utilisant $\lambda geq 0$, un paramètre de régularisation fixé par l'utilisateur. 
+      
+      \begin{center}
+          $score_{similarite}=\frac{\sum_i résidus_i^2}{\sum_i[p_i(1-p_i)]+\lambda}$
+      \end{center}
+      
+      \item A chaque séparation de l’arbre de régression potentiel, on calcule le gain ci-après :
+      
+      \begin{center}
+          $Gain=score_{similarite\_noeud\_gauche}+score_{similarite\_noeud\_droit}-score_{similarite\_noeud\_parent}$
+      \end{center}
+      
+      \item Pour chacune des séparations possibles, on retient celle qui maximise le gain. 
+      
+      \item Une fois l’arbre de régression créé, celui-ci va être élagué afin d’éviter le sur-ajustement de la façon suivante
+      
+      \begin{itemize}
+        \item Soit $min\_child\_weight$ un paramètre fixé par l’utilisateur. Toutes les feuilles comprenant un nombre de résidus inférieur au paramètre $min\_child\_weight$ seront supprimées. Par défaut, ce paramètre est fixé à 1. 
+        
+        \item  Soit gamma $\gamma$ un paramètre fixé par l’utilisateur. Pour chacune des feuilles, i.e., pour chacun des noeuds terminaux de l’arbre, on calcule delta=Gain – $\gamma$. Si delta $\geq$ 0 alors on garde la feuille et la séparation dont elle est issue, sinon on la supprime. Le cas échéant, on réitère l’opération pour les nouvelles feuilles obtenues, etc.
+      \end{itemize}
+    
+
+   \end{enumerate}
+   
+   \item Le calcul des valeurs de log(odds) associées à chaque feuille. Dans le cas de l’eXtreme Gradient Boosting, on a en effet :
+   
+   \item Le paramètre d’apprentissage noté $\nu$ en gradient boosting est appelée eta $\eta$ et vaut par défaut 0.3 et peut être optimisé
+   
+   \item Une parallélisation permet de construire les arbres en même temps ce qui réduit considérablement le temps de calcul
+
+\end{itemize}
+
+Références
+
+\begin{itemize}
+\item
+  Chen, T., He, T., Benesty, M., Khotilovich, V., Tang, Y., Cho, H.,
+  Chen, K., Mitchell, R., Cano, I., Zhou, T., Li, M., Xie, J., Lin, M.,
+  Geng, Y., Li, Y., 2018. xgboost: Extreme Gradient Boosting.
+\item
+  Starmer, J., 2020. XGBoost : Part 2: XGBoost Trees For Classification
+  {[}WWW Document{]}. URL
+  \url{https://www.youtube.com/watch?v=8b1JEDvenQU}
+\item
+  Starmer, J., 2019a. Gradient Boost Part 3: Classification {[}WWW
+  Document{]}. URL
+  \url{https://www.youtube.com/results?search_query=statquest+gradient+boost+part+3}
+\item
+  Starmer, J., 2019b. Gradient Boosting Part 4 : Classification Details
+  {[}WWW Document{]}. URL
+  \url{https://www.youtube.com/watch?v=StWY5QWMXCw\&t=209s}
+\end{itemize}
+
+\hypertarget{partial-least-squares}{%
+\subsection{Partial Least-Squares}\label{partial-least-squares}}
+
+\hypertarget{hmm---lissage-par-vitervi}{%
+\subsection{HMM - Lissage par Vitervi}\label{hmm---lissage-par-vitervi}}
+
+\hypertarget{deep-learning}{%
+\section{Deep Learning}\label{deep-learning}}
+
+L'essentiel de cette partie est issue de l'ouvrage \emph{Deep Learning
+with R}, réalisée par Chollet and Allaire (2018).
+
+\hypertarget{quest-ce-que-cest-que-le-deep-learning}{%
+\subsection{Qu'est-ce que c'est que le deep learning
+?}\label{quest-ce-que-cest-que-le-deep-learning}}
+
+Pour cela, il est nécesaire de resituer l'intelligence artificielle (ou
+\emph{AI} pour Artifical Intelligence), le machine learning et le deep
+learning, comme présenté dans la figure \ref{AI}, et de bien comprendre
+à quoi renvoit chacun de ces trois domaines.
+
+\begin{figure}[H]
+\includegraphics[width=11.04in]{DP/AI} \caption{\label{AI} Place du deep learning dans l'intelligence artificielle}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+Une définition de l'IA proposé par Chollet et Allaire est :
+\emph{L'effort d'automatiser des tâches intellectuelles habituellement
+réalisé par l'homme}. Elle regroupe de nombreux domaines, dont le
+machine learning et le deep learning, mais pas uniquement. Elle groupe
+également des domaines n'incluant aucun domaine d'apprentissage, comme
+les premiers programmes de jeux aux échecs, en ne programmant que les
+règles du jeu. L'IA permet notamment de résoudre des problèmes avec un
+ensemble de règle bien défini, mais montre des limites quand des règles
+précises ne sont pas établies.
+
+Dans de tels cas, on passe alors au machine learning. L'objectif est
+alors à partir de données et de réponses, de faire émerger des règles de
+la part de l'IA. Cela nécessite un ``\emph{entraînement}'' pour faire
+émerger des règles, et donc une grande quantité de données. Un
+algorithme de machine learning a donc besoin de trois éléments : des
+données d'entrée, des exemples de sorties attendues et un métrique pour
+vérifier que l'algorithme réalise bien son travail. C'est en comparant
+les entrées et les sorties qu'il ``\emph{apprend}'' donc. Cela passe
+notamment par donner de meilleures représentations pour donner les
+sorties attendues, afin de faire émerger les règles. L'ACP est donc
+considéré par certains comme du machine learning.
+
+Le deep learning est une sous-catégorie particulière du machine
+learning. Le terme \emph{deep} y renvoie à une succession de différence
+couche (layer en anglais) d'apprentissage, et donc différente couche de
+représentation. Chacune de ces couches sont représentées par des réseaux
+de neurones, empilés les uns sur les autres (d'où la notion de couche).
+Même si la notion de réseaux de neurones renvoie à des concepts de
+neuro-biologie, car certains concepts du deep learning sont tirés de
+notre connaissance du cerveau, les modèles de deep learning ne sont pas
+des modèles du cerveau (comme l'affirment certains articles de presse
+grand public).
+
+Le deep learning a de nombreuses applications au quotidien. En voici
+quelques exemples : reconnaissance de caractères (via la lecture
+automatique de code postaux), amélioration des outils de traduction,
+assistant digitaux vocaux comme ceux proposés par Google et Amazon,
+intelligence de jeux pour le GO ou Starcraft 2.
+
+\hypertarget{grands-principes-du-deep-learning}{%
+\subsection{Grands principes du deep
+learning}\label{grands-principes-du-deep-learning}}
+
+Prenons le cas d'input X comme présenté sur la figure \ref{DP_function}.
+Une première couche de neurone enregistre des poids, c'est-à-dire des
+nombres. Dans ce cas, l'apprentissage correspond à trouver l'ensemble
+des valeurs des poids de toutes les couches du réseau de neurones.
+Cependant, un réseau neuronal profond (deep neural network) peu contenir
+des millions de paramètres. Il devient donc particulièrement difficilie
+de trouver l'ensemble des valeurs fonctionnant ensemble. Pour contrôler
+cela, il faut utiliser la \emph{loss function} qui mesure la distance
+entre les sorties obtenues (i.e.~prédites) et attendues. Grâce à cela,
+elle donne comment s'est comporté le réseau de neurones sur
+l'apprentissage. Un élément important est d'utiliser cette \emph{loss
+function} comme un signal de retour pour ajuster les valeurs de poids,
+afin de baisser le \emph{loss score} (i.e.~la distance donnée). Ceci est
+réalisé par l'\emph{optimizer}, qui implémente l'algorithme de
+\emph{backpropagation}, qui est l'algo central du deep learning.
+
+Initiallement, les poids des réseaux de neurones sont attribués
+aléatoirements, et cela peut nécessiter plusieurs retours en arrière
+pour ajuster ces valeurs. C'est la boucle d'apprentissage
+(\emph{training loop}), qui répétait suffisament de vois, permet de
+minimiser la fonction de perte (\emph{loss function}).
+
+\begin{figure}[H]
+\includegraphics[width=5.65in]{DP/Function_DP} \caption{\label{DP_function} Fonctionnement de base du deep learning}\label{fig:unnamed-chunk-6}
+\end{figure}
+
+\hypertarget{rstudio}{%
+\section{Rstudio}\label{rstudio}}
+
+\hypertarget{quelques-raccourcies}{%
+\subsection{quelques raccourcies}\label{quelques-raccourcies}}
+
+\hypertarget{rstudio-1}{%
+\subsection{Rstudio}\label{rstudio-1}}
+
+Quelques raccourcis intéressants : - \emph{ALT + -} : écrit de lisgne
+d'assignation \textbf{\textless-} - \emph{CTRL + MAJ + M} écrira le
+signe du pipe \textbf{\%\textgreater\%} - \emph{CTRL + MAJ + R} vous
+permettra d'écrire proprement un titre de nouvelle section - \emph{CTRL
++ ALT + I} insérera un code chunk R dans votre code Rmarkdown -
+\emph{CTRL + ALT + X} : alors celui-là est très intéressant. Si vous
+avez un bout de code que vous souhaitez transformer en fonction, ce
+raccourci-clavier fera tout le boulot tout seul, jusqu'à deviner le nom
+des paramètres de la fonction, vous n'aurez qu'à entrer le nom de la
+fonction. - \emph{ALT + L} réduit la section dans laquelle est le
+curseur - \emph{ALT + MAJ + L} ouvre la section - \emph{ALT + O} réduit
+toutes les sections - \emph{ALT + MAJ + O} ouvre toutes les sections -
+\emph{CTRL + I} indente correctement le code sélectionné - \emph{CTRL +
+MAJ + C} commente ou dé-commente la ligne active ou les ligne
+
+Fonction cut -\textgreater{} Permet de transformet une quanti en quali
+avec des intervalles données
+
+Fonction smartbind de chez gtools -\textgreater{} faire du rbind avec
+des colonnes mal agencées, permet du rbind selon le nom des colonnes.
+
+Fonction droplevels -\textgreater{} Fait disparaître les niveaux de
+facteurs non utilisés.
+
+\pagebreak
+
+\hypertarget{bibliographie}{%
+\section*{Bibliographie}\label{bibliographie}}
+\addcontentsline{toc}{section}{Bibliographie}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-chollet_deep_2018}{}%
+Chollet, F., Allaire, J.J., 2018. Deep {Learning} with {R}, 1 edition.
+ed. Manning Publications, Shelter Island, NY.
+
+\end{CSLReferences}
+
+\end{document}

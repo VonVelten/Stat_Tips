@@ -1,0 +1,247 @@
+# Quelques définitions en vrac (et qu'on peut retrouver plus bas)
+
+## Des notions mathématiques
+
+**Moyenne :**
+
+**Variance :**
+
+**Covariance :** La covariance d'un couple de variable aléatoire (X,Y) est défini comme $cov(X,Y)=E(XY)-E(X)E(Y)$. Si X et Y sont indépendants, alors on a $E(XY)=E(X)E(Y)$, donc la covariance est nulle.
+
+**Coefficient de corrélation linéaire** : Pour deux variables aléatoires X et Y, de variances non nulles, on peut définir leur coefficient de corrélation linéaire par $Cor(X,Y)=\frac{cov(X,Y)}{\sqrt{V(X)V(Y)}}$
+
+**Moyenne harmonique** $\tilde{\mu}$ : La moyenne harmonique $\tilde{\mu}$ d''un échantillon de taille n associées aux valeurs {$x_1,x_2,....x_n$} est le nombre dont l'inverse est la moyenne arithmétique des inverses des dites valeurs :
+
+```{=tex}
+\begin{center}
+  $\tilde{\mu}=\frac{n}{\frac{1}{x_1}+\frac{1}{x_2}+...\frac{1}{x_n}}$
+\end{center}
+```
+Si à chaque $x_i$ est associé un poids $w_i$ spécifique, son estimation devient alors :
+
+```{=tex}
+\begin{center}
+  $\tilde{\mu}=\frac{\sum_{i=1}^nw_i}{\sum_{i=1}^nw_ix_i}$
+\end{center}
+```
+**La suite arithmétique** : on a U$_{n+1}$=U$_n$+r, avec *r* sa raison arithmétique. Alors la somme des termes vaut $\sum_{k=0}^nU_k=\frac{(U_0+U_n)(n+1)}{2}=(n+1)U_0+\frac{rn(n+1)}{2}$
+
+**La suite géométrique** : on a $U_n=U_oq^n$ avec q sa raison (différente de 0). On a alors que si q est différent de 1, la somme des termes vaut $\sum_{k=0}^nU_k=(\frac{q^{n+1}-1}{q-1})U_0$
+
+**La suite arithmético-géométrique** : on a $U_{n+1}=aU_n+b$, avec a et b différents de 0. On peut alors calculer également définir c, solution unique de $ac+b=c$, avec a différent de 1, tel que $U_n=(U_0-c)*a^n+c$, pour tout n un entier positif.
+
+**La suite récurrente linéaire d'ordre 2** : On défini alors $U_{n+2}=aU_{n+1}+bU_n$. On définit alors le polynome P caractéristique de $U_n$ : $X^2-aX-b$. Si b est différent de 0, et $\mu$ et $\lambda$ les racines de P, Alrs il exsite $\alpha$ et $\beta$, des nombres complexes, tels que s'il sont différents, $U_n=\alpha \lambda^n + \beta \mu ^n$, et $(\alpha n+ \beta) \lambda ^n$ sinon.
+
+**Propriété du coefficient binomial** : Il permet de compte au nombre d'arrangements en sélectionnant k élément parmi n. On définit alors $C^k_n=\frac{n!}{k!(n-k)!}$. On peut notamment noter que $C^k_n=C^{n-k}_n$ et que $C^{k+1}_{n+1}=C^k_n+C^{k+1}_n$
+
+## Quelques notions de probabilités
+
+### Elements généraux
+
+En dehors du théorème central limite sur lequel se base une grande partie des statistiques, plusieurs élèments de probabilités trouvent sens dans les analyses statistiques. La première est la définition de l'indépendance. Si on considère deux évènements A et B indépendants, alors $P(A\cap B)=P(A)\times P(B)$. A l'inverse, on sait que A est indépendant de B si $P(A|B)=P(A)$, c'est-à-dire que la réalisation de A ne dépend pas de B.
+
+### Lois discrètes :
+
+-   Loi uniforme définie sur {1,...n}, alors pour k appartenant à cet ensemble, P(X=k)=$\frac{1}{n}$, E(X)=$\frac{n+1}{2}$, V(X)=$\frac{n^2-1}{12}$
+-   Loi de Bernouilli/Binomiale, de paramètre (n,p), où n le nombre d'essai, et p la probabiltié que cela arrive sur 1 événement, défini sur [0;n] -\> [0,1], P(X=k)=$C_k^np^k(1-p)^{n-k}$, E(X) = np, V(X)=np(1-p)
+-   Loi Multinomiale, de paramètre c (le nombre de modalité possible supérieur ou égal à 2 et un entier positif) et $n_1,....n_c$ le nombre maximales obtenues pour chaque valeur tel que $n=\sum_{k=1}^c n_k$. On définit alors $p_k=\frac{n_k}{n}$ On a alors $P(X_1=k_1,...,X_c=k_c)=\frac{n!}{k_1!x...xk_c!} \times p_1^{k_1} \times ... \times p_c^{k_c}$
+-   Loi de Poisson, de paramètre $\lambda$, défini sur [0;+$\infty$[ -\> [0,1], P(X=k)=$\frac{\lambda^k}{k!}e^{-\lambda}$ . E(X)=$\lambda$, V(X)=$\lambda$
+-   Loi de Parcal / Loi Binomiale Négative : Combien de tirage pour obtenir k fois le même éléments : $P(X=n)=C^{k-1}_{k-1}p^k(1-p)^{n-k}$, $E(X)=\frac{k}{p}$ et $V(X)=\frac{k(1-p)}{p^2}$
+-   Loi géométrique de paramètre p qui compte le nombre d'essai jusqu'à un succès, on A P(X)=$p(1-p)^{x-1}$, avec E(X)=$\frac{1}{p}$ et V(X)=$\frac{q}{p^2}$
+-   Loi Hypergéomtréique de paramètre (N,n,p), travaillant sur une population N dont on extrait une sous-population n, avec p la probabilité de l'événement d'intérêt. L'ensemble de définition de X dépend alors des valeurs de n et p choisies : {max(0;n-Nq),....,min(n,Np)} On a alors P(X=k)=$\frac{C^k_NC^{n-x}_{N-Np}}{C^n_N}$, avec E(X)=$np$ et V(X)=$\frac{N-n}{N-1}np(1-p)$. Il est à noté que si N $\hookrightarrow \infty$, alors la loi tend vers une loi Binomiale classique.
+
+### Lois continues :
+
+-   Loi Normale : de moyenne m et d'écart type$\sigma$, défini sur ]-$\infty$;+$\infty$[ -\> [0,1], f(x)=$\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}(\frac{t-m}{\sigma})^2}$
+-   Loi Uniforme, définie sur [a,b]. si $k \in [a,b]$, alors P(X$\leq$k)=$\frac{k-a}{b-a}$, avec E(X)=$\frac{b+a}{2}$ et V(x)=$\frac{(b-a)^2}{12}$
+-   Loi Exponentielle de paramètre $\lambda$ définie sur [0,$\infty$[. f(x)=$\lambda e^{-\lambda x}$ pour tout x positif, et E(X)=$\frac{1}{\lambda}$ et V(X)=$\frac{1}{\lambda^2}$.
+-   Loi Gamma, définie sur [0;$+\infty$]. $f(x)=\frac{1}{\beta ^\alpha \Gamma (\alpha )}x^{\alpha -1}e^{\frac{-x}{\beta}}$, avec $\Gamma(\alpha)=\int_0^{+\infty}\frac{x^{\alpha-1}}{\beta^\alpha}e^{\frac{-x}{\beta}}dx$. On peut alors l'écrire $f(x)=\frac{1}{\beta^\alpha(\alpha-1)!}x^{\alpha-1}e^{\frac{-x}{\beta}}$. E(X)=$\alpha\beta$ et V(X)=$\alpha\beta^2$
+-   Loi du khi-deux définie sur ]0,+$\infty$[ de paramètre $\nu$. Il s'agit d'un cas particulier de la loi Gamma, avec $\alpha = \nu/2$ et $\beta=2$, $\nu$ représente le nombre de degrés de liberté. On a alors $f(x)=\frac{1}{2^{\nu/2}\Gamma(\nu/2)}x^{\frac{\nu}{2}-1}e^{\frac{-x}{2}}$. On a alors E(X)=$\nu$ et V(X)=$2\nu$.
+
+## Sur des variables qualitatives
+
+**Odds ratio (OR) :** également appelé rapport de cotes.
+
+On peut l'oobtenir à partir d'un tableau de contingence, ici réussite à un examen selon le fait d'avoir révisé ou pas (Cf : Episode 11 de la chaine \href{https://www.youtube.com/watch?v=eB1FMSCD5zc&t=28s}{le risque $\alpha$})
+
+```{=tex}
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{l|cc}
+  & Réussite à l'examen & Echec à l'examen \\
+  \hline
+  Révision & 450 &50 \\
+  Pas de révision & 350 & 150 \\
+  \end{tabular}
+  \caption{Tableau de contingence sur la réussite à un examen}
+\end{table}
+```
+Dans ce cas, OR vaut 450/50 sur 350/150, soit 9/2.33, donc OR = 3.86.
+
+**Risque Relatif (RR) :** Ratio des risques entre le traitement et le contrôle. Dans le cas du tableau exposé pour l'OR, c'est 450/500 et 350/500. Ce qui donne un RR de 0.9/0.7 = 1.28. Il y a une augmentation de 28% des chances de réussir ses examens en révisant.
+
+Cependant, le RR n'est pas toujours calculable, contrairement à l'OR. Ils sont tous deux des tailles d'effet. Si les risques sont rares, OR et RR sont souvent très proches.
+
+**Needed Number to Treat (NNT)** : Principe assez simple, combien de sujet à traiter pour changer le résultat de 1 (Nombre de personne à soigner avec le traitement pour en soigner une de plus que dans le groupe contrôle). Il se calcule de la manière suivante :
+
+```{=tex}
+\begin{center}
+  $NNT = \frac{1}{\frac{Nbre Succès_ Traitement_t}{n_T}-\frac{Nbre Succès_C}{n_C}}$
+\end{center}
+```
+si on prend le cas du tableau exprimé pour les OR, on obtien un NNT de 1/(0.9-0.7)=5. Il faut donc que 5 personnes révisent pour qu'une de plus ait son examen.
+
+Cependant, parfois quelques utilisations abusives du NNT, et pas mal de problème dans la définition de son intervalle de confiance comme décrit par @hutton_number_2000. @hutton_number_2000 a proposé une autre définition du NNT à partir de $\pi_T$, proportion de succès dans le groupe Traitement :
+
+```{=tex}
+\begin{center}
+  $NNT=\frac{1-\pi_t{1-1/OR}}{\pi_T(1-\pi_T)(1-1/OR)}$
+\end{center}
+```
+Le problème principal est l'estimation de l'intervalle de confiance. Cet intervalle n'est en effet pas symétrique car le NNT ne suit pas une loi normale. De plus, par définition, le NNT ne peut valoir 0. Du coup, quand le NNT s'approche de zéro, des problèmes conceptuels apparaissent et rendent son utilisation très difficiles. De même, quand le NNT tend vers des grandes valeurs, son interprétation reste compliquée.
+
+## Quelques courbes de références
+
+### Courbes Concaves
+
+#### Courbes exponentielles
+
+Une très connu est la courbe exponentielle :
+
+$Y=ae^{kX}$
+
+où on peut moduler $a$ et $k$ pour renforcer ou non l'importance de l'effet exponentiel.
+
+```{r,echo=F,fig.cap="Exemples de courbes exponetielles selon leurs paramètres"}
+library(ggplot2)
+source("Usefull_functions.R")
+x<-seq(5,10,0.05)
+a<-1
+k<-1
+y1<-a*exp(k*x)
+y2<-a/2*exp(k*x)
+y3<-a*exp(k*0.9*x)
+y4<-a/2*exp(k*0.9*x)
+y<-c(y1,y2,y3,y4)
+Param<-rep(c("a = 1 /  k = 1","a = 0.5 / k = 1","a = 1 / k = 0.9","a = 0.5 / k = 0.9"),each=length(x))
+data<-data.frame(x=rep(x,times=4),y=y,Parameter=Param)
+p1<-ggplot(data,aes(y=y,x=x,color=Parameter))+geom_line()+theme_bw()+labs(x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+print(p1)
+```
+
+On peut aussi imaginer des valeurs négatives de $k$ pour avoir des courbes qui tendent vers 0.
+
+```{r,echo=F,fig.cap="Exemples de courbes exponetielles avec des coefficients négatifs"}
+x<-seq(5,10,0.05)
+a<-1
+k<--1
+y1<-a*exp(k*x)
+y2<-a/2*exp(k*x)
+y3<-a*exp(k*0.9*x)
+y4<-a/2*exp(k*0.9*x)
+y<-c(y1,y2,y3,y4)
+Param<-rep(c("a = 1 /  k = - 1","a = 0.5 / k = - 1","a = 1 / k = - 0.9","a = 0.5 / k = - 0.9"),each=length(x))
+data<-data.frame(x=rep(x,times=4),y=y,Parameter=Param)
+p1<-ggplot(data,aes(y=y,x=x,color=Parameter))+geom_line()+theme_bw()+labs(x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+print(p1)
+```
+
+#### Courbe asymptotique
+
+On peut représenter des courbes avec un modèle asymptotique pour Y quand X tend vers l'infini.
+
+$Y=a-(a-b)e^{-cX}$
+
+avec :
+
+-   $a$ le maximum possible à atteindre
+-   $b$ la valeur de Y à X=0
+-   $c$ l'augmentation relative de Y par rapport à X.
+
+```{r,echo=F,fig.cap="Exemple de modèle asymptotique"}
+x<-seq(0,15,0.05)
+
+a<-1
+b<-0
+c<-0.5
+y<-a-(a-b)*exp(-c*x)
+data<-data.frame(x=x,y=y)
+p1<-ggplot(data,aes(y=y,x=x))+geom_line()+theme_bw()+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+print(p1)
+
+```
+
+Dans le cas particulier où $b$=0, on parle souvent d'équation exponentielle négative, car on obtient alors la formule suivant :
+
+$Y=a[1-e^{-cX}]$
+
+On a donc Y=0 quand X=0, on parle alors de $c$ comme le coefficient d'extinction.
+
+### Courbes sigmoïdales
+
+$Y=c+\frac{d-c}{1+e^{b(X-e)}}$
+
+Avec :
+
+-   $d$ : la valeur maximale d'asymptote
+-   $c$ : la valeur minimale d'asymptote
+-   $e$ : la valeur de X pour laquelle on est à mi-chemin entre $c$ et $d$
+-   $b$ : représente la pente au niveau du point d'inflexion .
+
+```{r,fig.cap="Exemple du plusieurs courbes de régression logistique pour différentes valeurs de b",echo=F}
+library(ggplot2)
+x<-seq(-30,30,0.05)
+
+c<-0
+d<-1
+b<-0.1
+e<-0
+y<-c+(d-c)/(1+exp(-b*(x-e)))
+data<-data.frame(x=x,y=y)
+p1<-ggplot(data,aes(y=y,x=x))+geom_line()+theme_bw()+labs(title="b=0.1",x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+
+b<-1
+e<-0
+y<-c+(d-c)/(1+exp(-b*(x-e)))
+data<-data.frame(x=x,y=y)
+p2<-ggplot(data,aes(y=y,x=x))+geom_line()+theme_bw()+labs(title="b=1",x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+
+
+b<-0.5
+e<-0
+y<-c+(d-c)/(1+exp(-b*(x-e)))
+data<-data.frame(x=x,y=y)
+p3<-ggplot(data,aes(y=y,x=x))+geom_line()+theme_bw()+labs(title="b=0.5",x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+
+b<-0.25
+e<-0
+y<-c+(d-c)/(1+exp(-b*(x-e)))
+data<-data.frame(x=x,y=y)
+p4<-ggplot(data,aes(y=y,x=x))+geom_line()+theme_bw()+labs(title="b=0.25",x=NULL,y=NULL)+
+  theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+
+
+multiplot(p1,p4,p3,p2,cols=2)
+```
+
+Cette fonction est utilisée dans le cadre d'une régression logistique à quatre paramètres. Dans une cas d'une régression logistique bimodale, on restreint alors $c$ à 0 et $d$ à 1. Il reste alors deux facteurs à estimer.

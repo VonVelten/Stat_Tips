@@ -1,0 +1,271 @@
+---
+title: "Quelques notes sur les statistiques"
+author: "P.Gaignon"
+date: \today
+header-includes:
+  - \usepackage{ucs} 
+  - \usepackage[T1]{fontenc}
+  - \newcommand*\chancery{\fontfamily{pzc}\selectfont}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage{tgschola}
+  - \usepackage{frcursive}
+  - \usepackage{latexsym,amsmath,amssymb,textcomp,amsfonts}
+  - \usepackage{graphicx}
+  - \usepackage{nccpic}
+  - \usepackage{setspace}
+  - \usepackage{multicol}
+  - \usepackage{url}
+  - \usepackage{wrapfig}
+  - \usepackage{setspace}
+  - \linespread{1.5}
+  - \usepackage{hyperref}
+  - \usepackage{geometry}
+  - \usepackage{tikz}
+  - \usetikzlibrary{snakes}
+  - \usepackage{tcolorbox}
+  - \renewcommand{\thesection}{\Roman{section})}
+  - \renewcommand{\thesubsection}{\alph{subsection}}
+  - \usepackage{titlesec}
+  - \titlespacing{\section}{0cm}{1cm}{0.4cm} 
+  - \titlespacing{\subsection}{0.7cm}{0.2cm}{0.1cm}
+  - \titlespacing{\subsubsection}{1.4cm}{0.cm}{0.1cm}
+  - \titlespacing{\paragraph}{2.1cm}{0.cm}{0.1cm}
+  - \usepackage{tocloft}
+  - \addtolength{\cftsecnumwidth}{10pt}
+  - \usepackage{chngcntr}
+  - \counterwithin{figure}{section}
+  - \makeatletter
+  - \renewcommand*\l@figure{\@dottedtocline{1}{1em}{3.2em}}
+  - \makeatother
+output: 
+  pdf_document: 
+    fig_caption: yes
+    fig_width: 8
+    keep_tex: yes
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+bibliography: Ref/Ref.bib
+csl: Ref/elsevier-harvard.csl
+editor_options: 
+  chunk_output_type: console
+  markdown: 
+    wrap: 72
+---
+
+```{r,echo=F,message=F,warning=F}
+rm(list=ls())
+
+#Contrasts à définir
+options(contrasts=c("contr.sum","contr.sum"))
+library(kableExtra)
+source("Usefull_functions.R")
+library(knitr)
+knitr::opts_chunk$set(warning=F,comment = "%", fig.pos="H",message = F)
+```
+
+\pagebreak
+
+\listoffigures
+
+\section*{A propos de ce document :}
+
+Ce document est destiné à une utilisation interne uniquement. Merci de
+ne pas le diffuser, s'agissant d'un document interne de travail, et
+étant un document servant de notes pour la consultance en statistiques.
+Un document spécifique destiné aux étudiants est en cours d'élaboration.
+
+Pour chaque partie, il est précisé les packages nécessaires à installer
+pour faire tourner le code proposé. Il est également important
+d'installer les dépendances des packages pour que tout fonctionne. Des
+commentaires de code sont également ajoutés pour expliquer certains
+éléments particuliers lors de la mise en pratique sous R.
+
+Attention, il ne s'agit pas d'un document apprenant à coder en R, mais
+donnant les éléments nécessaires pour réaliser certaines analyses. La
+majorité des analyses sont réalisées à partir de données déjà présentes
+dans R.
+
+\pagebreak
+
+# Quelques bases statistiques
+
+<!-- ```{r child = '01_Base_Stat.Rmd'} -->
+<!-- ``` -->
+
+\pagebreak
+
+# Analyse Factorielle
+
+<!-- ```{r child = '02_Analyse_Factorielle.Rmd'} -->
+<!-- ``` -->
+
+\pagebreak
+
+# Classification
+
+<!-- ```{r child = '03_Classification.Rmd'} -->
+<!-- ``` -->
+
+\pagebreak
+
+# Régression
+
+<!-- ```{r child = '04_Regression.Rmd'} -->
+
+<!-- ``` -->
+
+# Régression Logistique
+
+<!-- # ```{r child = '06_Reg_Log.Rmd'} -->
+<!-- #  -->
+<!-- # ``` -->
+
+# Sélection de modèles
+
+# Sélection de modèles
+
+Dans l'exemple, on va s'intéresser à l'épaisser de gras dorsal. Il
+s'agit d'une référence fixée par le marché mesuré dans les abbatoirs de
+porcs, et qui permet une évaluation indirecte par mesure sur la
+carcasse. Il existe différents type d'instruments pour essayer d'évaluer
+la qualité de la viande de porcs, mesurant l'épaisseur de gras et de
+muscle. L'objectif est d'obtenir une bonne prédiction du TMP. Il existe
+aussi des scanners maintenant qui apportent plus d'informations car ils
+étudient des zones plus larges, mais leur emploi est plus couteux. Pour
+cela, on dispose de différentes zones de mesure, ainsi que la mesure
+exacte du TMP.
+
+```{r}
+TMP<-read.table("Regression/19624_DIS05.txt",sep=",",header=T) #issu des données Agrocampus
+```
+
+L'objectif est de construitre une équation (donc un modèle) de
+prédiction (ici du TMP) à l'aide de mesure indirecte. Il s'agit d'une
+mise en équation du vivant, de ce que l'on observe, de quelque chose
+qu'on ne maitrise pas dans le but d'expliquer et/ou prédire.
+
+Modèle de régression linéaire :
+
+```{=tex}
+\begin{center}
+$Y =\beta_{0}+\sum_{i=1}^{p}\beta_{i}x_{i}+\epsilon$
+\end{center}
+```
+où :
+
+-   $p$ est le nombre de variables (ici le nombre d'épaisseurs
+    tissulaires mesurées)
+
+-   $\epsilon$ est l'erreur résiduelle d'écart-type $\sigma$
+
+Comment peut-on estimer un modèle ? Comment le valide-t-on ? On va
+partir de modèles connus (linéaires) vers non connus (non linéaires) à
+partir de mesures indirectes pour obtenir les prédictions qui nous
+intéressent et un modèle de référence (ex: modèle de prédiction du TMP).
+Cependant, s'il y a beaucoup de variables, la statistique est incapable
+de spécifier la non-linéarité, à cause du nombre de composantes trop
+élevé.
+
+Les modèles non-linéaires sont souvent avec 2 ou 3 variables, que l'on
+décompose toujours en deux parties, une "prévisible" (tendance moyenne)
+et une autre variable.
+
+Par exemple, il y al test du CGM (Capteur de Gras Maigre) dans le cas du
+TMP qui associé à des lieux mesures de références.
+
+Si l'on observe le tableau des corrélations des variablex explicatives,
+on observe une redondance de l'information, peut-être un sous-modèle
+serait-il plus intéressant (3 blocs de variables corrélées).
+
+```{=tex}
+\begin{figure}
+  \centering
+  \includegraphics{Regression/Tableau-Correlation.png}
+  \caption{Corrélations entre variables du jeu de données}
+\end{figure}
+```
+```{r}
+mod<-glm(TMP89~.,data=TMP[is.na(TMP$TMP89)==F,c(1,3:41)])
+summary(mod)
+```
+
+\pagebreak
+
+# Analyse Discriminante (Linéaire et Quadratique)
+
+<!-- ```{r child = '07_LDA.Rmd'} -->
+<!-- ``` -->
+
+\pagebreak
+
+# Analyse de survie
+
+<!-- ```{r child = '08_Survie.Rmd'} -->
+<!-- ``` -->
+
+\pagebreak
+
+# Meta-analyse
+
+<!-- ```{r child = '10_MA.Rmd'} -->
+<!-- ``` -->
+
+# Machine Learning
+
+```{r child = '12_ML.Rmd'}
+
+```
+
+# Deep Learning
+
+
+```{r child = '14_ML.Rmd'}
+
+```
+
+
+
+
+# Traitement d'image
+
+
+```{r child = '16_Image.Rmd'}
+
+```
+
+
+
+# Rstudio
+
+## quelques raccourcies
+
+## Rstudio
+
+Quelques raccourcis intéressants : - *ALT + -* : écrit de lisgne
+d'assignation **\<-** - *CTRL + MAJ + M* écrira le signe du pipe
+**%\>%** - *CTRL + MAJ + R* vous permettra d'écrire proprement un titre
+de nouvelle section - *CTRL + ALT + I* insérera un code chunk R dans
+votre code Rmarkdown - *CTRL + ALT + X* : alors celui-là est très
+intéressant. Si vous avez un bout de code que vous souhaitez transformer
+en fonction, ce raccourci-clavier fera tout le boulot tout seul, jusqu'à
+deviner le nom des paramètres de la fonction, vous n'aurez qu'à entrer
+le nom de la fonction. - *ALT + L* réduit la section dans laquelle est
+le curseur - *ALT + MAJ + L* ouvre la section - *ALT + O* réduit toutes
+les sections - *ALT + MAJ + O* ouvre toutes les sections - *CTRL + I*
+indente correctement le code sélectionné - *CTRL + MAJ + C* commente ou
+dé-commente la ligne active ou les ligne
+
+Fonction cut -\> Permet de transformet une quanti en quali avec des
+intervalles données
+
+Fonction smartbind de chez gtools -\> faire du rbind avec des colonnes
+mal agencées, permet du rbind selon le nom des colonnes.
+
+Fonction droplevels -\> Fait disparaître les niveaux de facteurs non
+utilisés.
+
+\pagebreak
+
+# Bibliographie

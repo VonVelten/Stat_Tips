@@ -1,0 +1,209 @@
+
+# Analyse discriminante Linéaire
+
+Source :
+- Cours de Mathieu Emily, à Agrocampus Ouest (document personnel)
+
+
+La LDA (pour Linear Discriminant Analysis en anglais, ou ADL en français) est une forme de classification supervisée. L'objectif est de trouver une règle de décision, la plus simple possible. Pour proposer une règle de classification, cela nécessite de choisir :
+1. un axe discriminant (Etape de discrimination)
+2. un seuil (Etape de Classification)
+
+Pour réaliser une LDA, on dispose d'un jeu de données composé de $n$ individus répartis en $K$ classes avec $p$ variables quantitatives pour décrire chaque individu. Pour réaliser les étapes évoquées précédemment, on cherche à :
+- maximiser la distance entre les centres des gravités => Maximiser la variance inter-groupe
+- minimiser la distance entre les points d'une classe et leur centre de gravité => Minimiser la variance intra-groupe
+
+
+## Notion mathématique liée à la LDA
+
+### Approche d'un point de vue géométrique 
+
+#### Choix d'un axe discriminant 
+
+On peut décomposer la variance totale $V$ entre la variance inter $B$ (ou moyenne des variances) et intra $W$ (variance des moyennes), on obtient $V=B+W$
+
+Si on note $g$ le centre de gravité globale sur $\mathbb{R}^p$, on a :
+
+\begin{center}
+$ V=\frac{1}{n}\sum_{i=1}^n(x_i-g)^t(x_i-g)$ avec $g=\frac{1}{n}\sum^n_{i=1}xi$
+\end{center}
+
+En notant $g_k \in \mathbb{R}^p$ le centre de gravité du nuage des points de la classe, noté $C^k$:
+\begin{center}
+$ B=\frac{1}{n}\sum_{k=1}^Kn_k(g_k-g)^t(g_k-g)$ avec $g_k=\frac{1}{n_k}\sum^{n_k}_{i=C_k}xi$
+\end{center}
+
+et en notant $V_k$ la matrice de variance intra-groupe de la classe k, on a :
+\begin{center}
+$ W=\frac{1}{n}\sum_{k=1}^KV_k$ avec $V_k=\frac{1}{n_k}\sum^{n_k}_{i=C_k}(x_i-g_k)^t(x_i-g_k)$
+\end{center}
+
+Si on considère $u$ un axe et $V(u)$ la variance totale projetée sur u (De même pour $B(u)$ et $W(u)$), on peut alors montrer que :
+\begin{center}
+$V(u)=u^tVu$, $B(u)=u^tBu$ et $W(u)=u^tWu$ 
+\end{center}
+
+Après projection sur l'axe $u$, la décomposition de la variance est conservée :
+
+\begin{center}
+$V(u)=B(u)+W(u)$
+\end{center}
+
+Donc, un axe $u$ est discriminant si :
+- B(u) est grand
+- W(u) est petit
+
+Cependant, il est n'est possible de maximiser la variance inter-groupe (B) et de minimiser la variance inter-groupe (W). On cherche donc à maximiser le ratio $J = B/W$, Du coup, plus $J(u)$ est grand, plus $u$ discrimine les groupes. Définie de cette façon, $J$ correspond à une statistique de Fisher. 
+
+Soit $u$ la solution du problème de doscroùo,atopn :
+
+\begin{center}
+$u=argmax_v\frac{}{}$
+\end{enter}
+
+Résoudre l'équation ci-dessus revient à résoudre $W^{-1}Bu=\mu u$. $u$ est donc l'ensemble des vecteurs propres associés à $W^{-1}B$. De façon équivalente, $u$ est l'ensemble des vecteurs propres associés à $V^{-1}Bu=\lambda u$. Déterminer $u$ tel qu'il soit une solution à l'équation précédente est un problème aux valeurs propres. Il existe au plus K-1 valeurs propres non nulles. Les valeurs proprent offrent un ordonnement des vecteurs propres. Le vecteur propre associée à la valeur propre la plus élevée corresponda au 1er axe discriminant, et ainsi de suite. Une analyse discriminante est une ACP sur le nuage des K centres de gravité, pondérés par l'effect des classes $n_k$, avec $V^{-1}$ comme métrique. L'interprétation des valeurs propres permet d'interpréter 
+
+
+#### Attribution d'un point à un groupe
+
+
+Pour cela, on a besoin de définir la distance de Mahalanobis :
+
+\begin{center}
+$d^2(e,g_k)=(e-g_k)^tW^{-1}(e-g_k)$
+\end{center}
+
+La règle de Fischer pour $k$ groupe et $p$ dimensions. Un point $e \in \mathbb{R}^p$  est classé dans le groupe $l$ si $g_l$ est le centre de gravité le plus proche au sens de Mahalanobis :
+
+\begin{center}
+$(e-g_l)^tW^{-1}(e-g_l)=\underset{k=1...K}{min}(e-g_k)^tW^{-1}(e-g_k)$
+\end{center}
+
+Attention, car la matrice $W^{-1}$ est estimée sur l'e,semble des donnés. Cela engendre plusieurs problèmes : 
+- Pas adapté au cas où les classes ont des dispersions différentes ($W_k$ dépend de $k$)
+- De façon implicite, chaque classe est supposée avoir le même poids : l'appartenance à une classe n'est pas forcément uniforme (cas où $n_k$ dépend de $k$). 
+
+La règle de classification est bonne si les individus sont rarement mal-classés. La régle géométrique est optimale dans  le contexte suivant :
+- Les observations d'une classe $l$ suivent une loi normale (multivariée) de matrice $W$
+- $W$ ne dépend pas de $l$ : elle est identique pour toutes les classes
+-  Les classes sont équidistribuées : les probabilités **a priori** d'appartenance à chaque classe sont égales.
+
+
+### Point de vue Probabilite
+
+#### La loi normale multivariée
+
+Soit $\mathbb{X} = (X_1,....,X_p)$, un vecteur aléatoire de $\mathbb{R}^p$. Ce vecteur peut se caractériser par :
+- une densité : $f: \mathbb{R}^p \rightarrow \mathbb{R}^+$
+- une fonction de répartition : $F$
+
+Le principal changement entre une variable aléatoire et un vecteur aléatoire est la modélisation de la loi jointe entre des variables aléatoire. On modélise donc explicitement la covariance entre des variables aléatoires. Si $\mathbb{X}$ est un vecteur aléatoire gaussien, on a alors :
+
+\begin{center}
+$f_\mathbb{R}(x)=\frac{1}{(2\pi)^{p/2}|\Sigma |^{-1/2}}e^{-1/2(x-\mu)^t\Sigma^{-1}(x-\Sigma)}$
+\end{center}
+
+avec comme paramètres multidimensionnels :
+- $x$ un vecteur de $\mathbb{R}^p$
+- $\mu$ un vecteur de $\mathbb{R}^p$
+- $\sum$ est une matrice de $\mathbb{R}^n \times \mathbb{R}^p$
+
+On note alors  $\mathbb{R} \hookrightarrow \mathcal{N}(\mu,\Sigma)$, avec $\mu$ le vecteur des espérances de chaque variable aléatoire $X_i$, et $\Sigma$ la matrice de variance-covariance des $X_i$. $p=1$ est le cas particulier de la loi normale univariée.
+
+Des données issues d'un modèle gaussion ont pour densité :
+
+\begin{center}
+$f_X(x)=\sum^K_{k=1}\pi_kf_{X_k}$
+\end{enter}
+
+avec :
+- les $\pi_k$ sont les probabilités *a priori* d'appartenance aux classes, tel que $\sum^K_{k=1}\pi_k=1$
+- $X|Y=G_k \hookrightarrow \mathcal{N}(\mu_k,\Sigma_k)$ : sachant que le groupe est $Y=G_k$, on connaît la loi du vecteur X : $X_k \hookrightarrow \mathcal{N}(\mu_k,\Sigma_k)$ où $\mu_k \in \mathbb{R}^p$ et $\Sigma_k$ est une matrice symétrique $p \times p$. 
+
+
+#### La classification de Bayes
+
+
+Soit $Y$ la variable de groupe : $Y \in [G_1,...,G_k]$, et $x$ une observation que l'on cherche à classer. Du point de vue probabiliste, $x$ est classé dans le groupe qui maximise la probabilité d'appartenance $P[Y=G_k|X=x]$, donc selon le théorème de Bayes, cela revient à maximiser : 
+
+\begin{center}
+$P[Y=G_k|X=x]=\frac{"P[X=X|Y=G_k]"P[Y=G_k]}{"P[X=x]"}=\frac{f_{X|Y=\theta_k}(x)\pi_k}{f_X(x)}$
+\end{center}
+
+Pour maximiser cela, il faut connaître les lois conditionnelles $f_{X|Y=G_k}(x)$ et les probabilités à priori $\pi_k$. Si on est dans un cas gaussien, on a :
+
+\begin{center}
+$f_{X|Y=G_k}()x)=\frac{1}{(2\pi)^{p/2}|\Sigma_k|^{-1/2}}e^{-1/2(x-\mu_k)^t\Sigma_k^{-1}(x-\mu_k)}$
+\end{center}
+
+
+#####  Cas particulier : Homoscédasticité et **a priori** uniforme
+
+Dans ce cas précis,  on a alors que les $K$ groupes ont la même variance intra $\sigma$ (homoscédasticité), et les $K$ groupes sont de mêmes poids $1/k$. On a alors : 
+
+\begin{center}
+$P[Y=G_k|X=x]=\frac{f_{X|Y=G_k}(x)\pi_k}{f_X(x)}=\frac{1}{Kf_X(x)}\frac{1}{(2\pi)^{p/2}|\Sigma|^{-1/2}}e^{-1/2(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)}$
+\end{center}
+
+Dans ce cas, maximiser $P[Y=G_k|X=x]$ revient à minimiser $(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)$. On retrouve alors le critère géométrique et la distance de Mahalanobis.
+
+#####  Cas particulier : Homoscédasticité et **a priori** non uniforme
+
+Par rapport au cas précédent, on a sait seulement que $\Sigma_k=\Sigma$. On cherche à maximiser alors :
+
+\begin{center}
+$P[Y=G_k|X=x]=\frac{\pi_k}{f_X(x)}\frac{1}{(2\pi)^{p/2}|\Sigma|^{-1/2}}e^{-1/2(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)}$
+\end{center}
+
+ce qui revient à maximiser 
+
+\begin{center}
+$\pi_Ke^{-1/2(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)}$ ou $ - \frac{(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)}{2}+log(\pi_k)$ 
+\end{center}
+
+
+Interpétation de la linéarité :
+
+\begin{center}
+$P[Y=G_k|X=x]=\frac{\pi_k}{f_X(x)}\frac{1}{(2\pi)^{p/2}|\Sigma|^{-1/2}}e^{-1/2(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)}$
+
+$log(P[Y=G_k|X=x])=cte + log(\pi_K) -1/2(x-\mu_k)^t\Sigma^{-1}(x-\mu_k)$
+
+$log(P[Y=G_k|X=x])=cte + log(\pi_K) -1/2\mu_k^t\Sigma^{-1}\mu_k+\mu^t_k\Sigma^{-1}x$
+
+$log(P[Y=G_k|X=x])=\beta_0^l+\beta_1^kx_1+...+\beta_p^kx_k$
+\end{center}
+
+Pour classer x dans un groupe, on cherche donc à maximiser des relations linéaires. Géométriquement, on cherche à séparer l'espace à l'aide d'hyperplans. 
+
+
+##### QDA: Quadratic Discriminant Analysis
+
+Si on perd l'hétéroscédasticité ($\Sigma_k=\Sigma$), on pert alors la linéarité. On a alors :
+
+\begin{center}
+$P[Y=G_k|X=x]=\frac{\pi_k}{f_X(x)}\frac{1}{(2\pi)^{p/2}|\Sigma|_k^{-1/2}}e^{-1/2(x-\mu_k)^t\Sigma_k^{-1}(x-\mu_k)}$
+
+$log(P[Y=G_k|X=x])=cte -1/2(x-\mu_k)^t\Sigma_k^{-1}(x-\mu_k)$
+
+$log(P[Y=G_k|X=x])=cte + \mu^t_k\Sigma_k^{-1}x-(1/2)x^t\Sigma_k^{-1}x$
+
+$log(P[Y=G_k|X=x])=\beta_0^k+B_1^kx_1+...\beta_p^kx_p+\gamma_1^kx^2_1+...\gamma_p^kx_p^2$
+\end{center}
+
+Pour classer x dans un groupe, on cherche donc à maximiser des relations quadratiques.
+
+
+
+## Application sous R
+
+Pour la LDA et la QDA, il existe les fonctions éponymes dy packages **MASS** (**lda** et **qda**). 
+
+
+```{r}
+data(iris)
+library(MASS)
+lda(Species~Sepal.Length+Sepal.Width+Petal.Length+Petal.Width,data=iris)
+
+```
+

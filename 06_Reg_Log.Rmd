@@ -1,0 +1,160 @@
+
+Ici, la problématique est d'expliquer une variable qualitative avec un nombre fini de modalité. On cherche à expliquer pour l'individu présente cette modalité et pas une autre (On parle d'analyse discriminante dont la régression logistique est une façon d'analyser ces données). 
+
+Documents sources utilisés:
+
+- \href{https://perso.univ-rennes2.fr/system/files/users/rouviere_l/poly_logistique_web.pdf}{\textcolor{blue}{Régression logistique avec R}}, Laurent Rouvière, Université de Rennes 2
+
+- \href{http://larmarange.github.io/analyse-R/regression-logistique.html}{\textcolor{blue}{Régression logistique binaire, multinomiale et ordinale}}, site analyse-R
+
+- Cours de Mathieu Emily, Agrocampus Ouest (document Perso)
+
+
+## Problème liés à la régression logistique
+
+On ne peut pas modéliser une variable qualitative par une relation linéaire. Si on code 1 le décès et la survie 0, quel sens donner à une valeur de 0.68 ? L'individu est mort à 0.68% ?  Pour cela, on va travailler sur des probabilités de présenter chacune des différentes modalités, connaisasnt les variables explicatives qui nous intéressent. On peut alors estimer cette probabilité à parti du modèle suivant :
+
+\begin{center}
+  $p_\beta (x)=\beta_0+\sum_i\beta_ix_i+\epsilon$
+\end{center}
+
+Mais plusieurs limites à ce cas :
+
+- La variance de Y|X vaut $p_\beta (x)(1-p_\beta (x))$. Elle n'est donc pas constante (car dépend de x) et on ne peut donc vérifier l'hypothèse d'homoscédasticité
+
+- Pas de limite sur les valeurs, on peut donc avoir des valeurs supérieurs à 1 ou inférieur à 0. Quel seul leur donner ?
+
+Pour cela, il faut passer au modèle linéaire généralisé, pour les cas où Y n'est pas quantitative et les erreurs peuvent ne pas avoir la même variance
+
+
+## Régression logistique pour 2 modalités
+
+On va s'intéresser au fait de faire du sport en fonction d'autres élément (sexe, âge, etc..).
+
+```{r,fig.height=3}
+options(contrasts=c("contr.treatment","contr.poly")) # On utilise ces contrastes pour garder du sens aux odds-ratio. Car l'intercept moyen donne la probabilité moyenne d'un niveau, ce qui présente en soi peu d'intérêt d'un point de vu statistique
+# Pour charger les données
+library(questionr)
+data(hdv2003)
+d <- hdv2003
+# On recode la réponse en vrai/faux
+d$sport2 <- FALSE
+d$sport2[d$sport == "Oui"] <- TRUE
+plot(d$sport~d$age,xlab="Age",ylab="Pratique du sport")
+plot(d$sport~d$sexe,xlab="Sexe",ylab="Pratique du sport")
+```
+
+
+Plusieurs fonctions peuvent être utilisées pour estimer cela. Pour le modèle logistique, on utilise la fonction $h(x)=\frac{e^x}{1+e^x}$. On obtient alors l'estimation de Y :
+
+\begin{center}
+  $E[Y|X=x]=p(x)=\frac{e^{\beta_0+\beta_1x}}{1+^{\beta_0+\beta_1x}}$
+\end{center}
+
+on peut également l'écrire :
+
+\begin{center}
+  $logit p(x)=log(\frac{p(x)}{1+p(x)})=\beta_0+\beta_1x$
+\end{center}
+
+D'un point de vue mathématique, *logit* représente la fonction bijective et dérivable de ]0,1[ dans R. Pour estimer l'erreur $\epsilon$, on peut l'énoncer de la façon suivante :
+
+\begin{center}
+  $Y=p(x)+\epsilon$
+\end{center}
+
+où $\epsilon$ est l'écart entre p(x) et 0/1 (selon la valeur attendue). Du coup $\epsilon$ prend la valeur 1-p(x) avec une probabilité de p(x) et inversement. Elle suit donc une loi de Bernouilli. 
+
+### Interprétation des Coefficients
+
+- Coefficient $\beta$ lié à une variable quantitative. Dans ce cas, $e^\beta$ équivaut à l'odds-ratio (OR). La côte est dans ce cas multiplié par $e^\beta$ pour une variation d'une unité de la variable quantitative considérée. De façon générale, un $\beta$ positif augmentera la probabilité de rencontrer le 2e niveau de modalité, alors qu'un signe négatif la diminuera.
+
+- Coefficient $\alpha$ d'une variable qualitative. 
+
+
+
+```{r}
+mod<-glm(sport2~age+sexe+heures.tv+trav.satisf,data=d,family="binomial")
+confint(mod) # permet d'avoir l'intervalle de confiance des coefficients linéaires
+odds.ratio(mod) # Donne les OR de chaque effet, avec intervalle de confiance et si c'est significatif
+```
+
+On en retire les résultats que :
+
+- La pratique du sport diminue avec l'âge et avec le temps passé à regarder la télé (signe négatif)
+- Les femmes ont tendance à moins pratiquer le sport (signe négatif pour la modalité femme)
+- La baisse du niveau de satisfaction de son travail va de pair avec une plus grande pratique du sport.  
+
+
+
+```{r}
+library(broom) # permet l'estimation des données
+library(ggplot2)
+tmp<-tidy(mod,conf.int=T,exponentiate=T) # Permet d'estimer la valeur, son sd,
+        #   sa stat de test, sa p.value et son intervalle de confiance
+p<-ggplot(data=tmp,aes(x=estimate, y=term,xmin=conf.low,xmax=conf.high))+
+  geom_errorbarh()+scale_x_log10()+theme_classic()+geom_point()+
+  geom_vline(xintercept = 1)
+print(p)
+```
+
+
+### des petites extensions intéressantes
+
+```{r,include=FALSE}
+# devtools::install_github("larmarange/JLutils")
+```
+
+Sur Github, il est proposé une extension à tidy permettant d'avoir une estimation des coefficients avec rapport des modalités de référence à l'aide de la fonction *tidy_detailed()*/ 
+
+
+```{r}
+source("tidy_detailedR.R") # Petit soucis pour l'installation, 
+# récupération du code de gitthub en local pour l'utiliser
+td<-tidy_detailed(mod,exponentiate=T,conf.int=T)
+library(GGally)
+td$level_detail<-factor(td$label,levels=td$label)
+ggcoef(td,mapping=aes(y=level_detail,x=estimate,colour=variable_label),
+       exponentiate = T)+  theme_classic()
+```
+
+
+On peut également voir l'estimation, de la proportion de variable selon les modalités d'une variable (avec tous les autres fixés à la modalité de référence)
+
+```{r}
+library(effects)
+plot(allEffects(mod))
+```
+
+
+
+
+D'autres extensions sont proposées, notamment pour un tableau récapitulatif dans le document issu du site sur R. 
+
+## Régression logistique multi-classes (pour plus de 2 modalités)
+
+On ne peut dans ce cas plus modéliser les résultats à l'aide d'une loi binomiale. Il faut passer à une autre loi. Il s'agit d'une extension de la régression logistique aux variables qualitatives plus de 2 modalités. Dans ce cas, on compare alors les modalités à une modalité de référence. On peut de plus différencier deux cas : nominal ou ordonné. Dans me modèle multinomiale ordonné, on inclut que les niveaux sont successifs (comme le niveau de satisfaction), ce qui n'est pas le cas dans le cas nominal (comme la catégorie socio-professionnelle).
+
+Dans les 2 cas, on s'intéresse toujours à modéliser la loi de $Y|X=x$. Dans ces cas, la loi de réponse de Y passe de {0,1} à {1,...,K}. Il faudra donc estimer toutes les probabilités $\pi_j=P(Y=y|X=x)$. 
+
+
+
+
+
+### Modèle polytomique ordonné
+
+
+
+
+
+## Cas de la régression log-linéaire
+
+Dans ce cas, on s'intéresse à des comptages (nombre de morts, d'accidents, etc..). On utilise dans ce cas un modèle log-linéaire.  Dans ce cas, on modélise Y|X=x par une loi de poisson de paramètre $\lambda=\lambda(x)$ :
+
+\begin{center}
+  $log(E[Y|X=x]=x'\beta)$
+\end{center}
+
+Il suffit dans ce cas de spécifier la loi à l'aide de la fonction *glm()*.
+
+## Sélection de Modèles

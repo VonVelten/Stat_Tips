@@ -1,0 +1,426 @@
+
+# Classificiation
+
+Quelques sources utiles :
+
+- L'article publié pour l'utilisation du package NbClust par @charrad_nbclust:_2014
+
+- L'article sur le sens des indicateurs de clustering par @arbelaitz_extensive_2013 
+
+- L'ouvrage d'Alboukadel Kassambara : Practical Guide to Cluster Analysis in R (derniers chapitres à creuser)
+
+- L'ouvrage d'Andrexw Olesky : Data Science with R, step by step 
+
+- Un billet sur la classif : https://uc-r.github.io/hc_clustering#algorithms 
+
+```{r,echo=F}
+rm(list=ls())
+```
+
+```{r,message=F}
+library(cluster)
+library(FactoMineR)
+library(factoextra)
+# Jeu de données d'exemples
+data("USArrests")
+df<-USArrests
+```
+
+
+## Notions utiles pour la classification
+
+### Choix des distances
+
+Un des premiers choix à faire qunad on fait une classification est la distance de référence que l'on utilise pour calculer. Il en existe de nombreuses. On peut notamment citer :
+
+- **Distance euclidienne** : Pour une distance *d* entre deux objets *x* et *x'*, $d(x,x')=\sqrt{\sum_j(x_{j}-'x_{j})^2}$. Il s'agit de la distance utilisement classiquement quand on peut se déplacer dans toutes les directions
+
+- **Distance de Manhattan** : Pour une distance *d* entre deux objets *x* et *x'*, $d(x,x')=\sum_j|x_{j}-x'_{j}|$. Il s'agit d'une distance où ne peut se déplacer que selon le sens d'un seul axe à la fois (cf : Organisation de Manhattan). 
+
+- **Distance de Minkowski** : Il s'agit d'une généralisation dont les distances euclidiennes et de manhattan sont des cas particuliers, respectivement d'ordre 1 et 2. La distance *d* d'ordre *p* est définie entre deux objets *x* et *x'* : $d(x,x')=^p\sqrt{\sum_j|x_{j}-'x_{j}|^p}$
+
+- **Distance de Tchebychev (ou distance maximale)** : Il s'agit du cas d'une distance de Minkowski où $p$ tend vers $\infty$. La distance $d$ entre deux objets $x$ et $x'$ est alors définie : $d(x,x')=max_{i \in [o,n]}(|x_i-x'_i|)$.
+
+- **Distance de Canberra** : Il s'agit d'une version de la distance de Manhattan pondérée à la distance au centre du repère spatial.  $d(x,x')=\sum_i\frac{|x_i-x'_i|}{|x_i|+|x'_i|}$
+
+- **Distance de Hamming (ou binaire)**: Les éléments d'un vecteur sont comparés deux à deux, et on compte simplement le nombre d'éléments qui ne sont pas communs entre les deux vecteurs.
+
+
+Il est possible de visualiser les distances entre les individus. On va pour cela s'aider du jeu de données *USArrets*. A l'aide des fonctions du package *factoextra*, on peut visualiser les distances entre individus, selon deux méthodes de calcul des distances, euclidienne ou de Canberra. 
+
+
+```{r,fig.height=7,fig.width=14}
+df<-USArrests
+head(df)
+df<-na.omit(df) # on s'affranchit des données manquantes
+df<-scale(df) # On norme toutes les données
+distance.Eucli <- get_dist(df,method="euclidean") # calcule de la distance euclidienne
+distance.Can  <- get_dist(df,method="canberra") # calcule de la distance de Canberra
+```
+
+
+```{r,fig.cap="Distance euclidienne entre individus"}
+print(fviz_dist(distance.Eucli, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07")))
+```
+
+```{r,fig.cap="Distance de Canberra entre individus"}
+print(fviz_dist(distance.Can, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07")))
+```
+
+Pour les données qualitatives/mixtes (quanti et quali), la fonction *daisy()* du package *cluster* propose une estimation des distances. Il peut être également intéressant de passer par une analyse factorielle auparavant pour repasser dans des espaces de dimension plus classique (ACM, AFDM). 
+
+### Choix de la méthode d'aggrégation des groupes :
+
+Les méthodes de
+
+- **Critère de Ward** : Consiste à regrouper les classes de façon que l'augmentation de l'inertie interclasse soit maximum, ou, ce qui revient au même d'après le théorème de Huygens, de façon que l'augmentation de l'inertie intra-classe soit minimum. On cherche donc à regrouper les groupes d'individus les plus homogènes entre eux. Il existe actuellement deux versions de ce critères (Ward et Ward.D2) sous **R**. La première n'implémente pas le critère d'agrégation de Wards, contrairement à la seconde (qui est donc conseillée).
+
+
+- **Single**  : La distance entre deux clusters, *i* et *j*, est estimée à partir de la distance minimale entre des points de chaque groupe  : $d(i,j)=min \hspace{0.3cm} d(x,y), x\in C_i, y\in C_j$. Cette méthode peut mener à des regroupements à partir d'individus singuliers de chaque groupe, alors que la majorité des éléments d'un groupe sont très distants de l'autre. 
+
+- **Complete** : La distance entre deux clusters est estimée à partir de la distance maximale entre des points de chacun des clusters. $d(i,j)=max \hspace{0.3cm} d(x,y), x\in C_i, y\in C_j$.
+
+- **Average**  : La distance entre deux clusters est estimée à partir de la distance moyenne entre les points de chaque clusters :$d(i,j)=\frac{1}{n_i\times n_j}\sum_{x\in C_i}\sum_{y\in C_j}d(x,y)$. Cette méthode tend à former des clusters avec des variances similaires, souvent assez faibles. 
+
+
+- **Centroid** : Il s'agit du carré de la distance euclidienne entre les centres de gravité des deux clusters. $d(i,j)=||\bar{x_i}-\bar{x_j}||^2$. Cette méthode est plus robuste que les autres face aux points isolés. 
+
+
+### Indicateurs pour sélectionner le nombre de cluster
+
+Le package *NbClust* propose 30 indices pour aider à sélectionner le nombre optimal de cluster suite à une classification ascendante hiérarchique. En voici quelques uns et ce que l'on peut en attendre :
+
+- **CH index** :
+
+- **Cubic Clustering Criteion (CCC)** : L'objectif est de comparer le R$^2$ obtenu en agrégeant un  nombre donné de cluster avec le R$^2$ obtenu en regroupant des points uniformément distribués. Il ne donne que des valeurs négatives. Le nombre idéal s'obtient à la valeur la plus basse du CCC (valeurs décroissantes avec l'augmentation du nombre de cluster jusqu'à l'optimal avant un nouvel accroissement).
+
+- **Pseudo T$^2$** : pseudo T squared  est un index qui quantifie la différence entre le ratio de l'inertie intra-cluster et inter-cluster quand deux clusters sont regroupés (En sélectionnant le meilleur à une étape de recoupement donnée). S'il y a un saut de la valeur du pseudo T$^2$ pour n clusters, il faut alors sélectionner n+1 clusters. 
+
+
+
+## Méthode de Classification
+
+### Partionnement selon la méthode des K-Means 
+
+L'algorithme des k-means, ou des centres mobiles,  regroupe tous les individus en $k$ groupes, $k$ étant prédéfini au préalable. Pour cela, il démarre de $k$ points, choisis par l'utilisateur ou aléatoirement au début de l'algorithme, qui sont considérés comme les centres de gravité des $k$ groupes. Il réalise ensuite de façon répétitive les étapes suivantes :
+
+1. Il agrège tous les individus au k-groupe selon la distance aux $k$ centre de gravité $g_k$ (Ils sont agrégés au centre le plus proche).
+2. Ils recalculent les centres de gravités $g_k$.
+
+L'algorithme s'arrête quand la distance parcourue par chacun des centres de gravités (ou centroïdes) devient inférieure à une valeur seuil définie au début. Le choix des individus initiaux est donc important car il peut fortement influer sur les résultats. De même, le choix du nombre de groupes est déterminé par l'utilisateur qui doit donc avoir une connaissance à priori des résultats recherchés. Si le nombre de groupe est relativement important, les résultats peuvent être différents à chaque utilisation du kmeans (les individus choisis initialement n'étant pas les mêmes)
+
+
+```{r,fig.cap="Premier résultat de k-means"}
+kc<-kmeans(df,10) 
+fviz_cluster(kc,data=df)+theme_classic()
+```
+
+
+```{r,fig.cap="Second résultat de k-means"}
+kc<-kmeans(df,10) 
+fviz_cluster(kc,data=df)+theme_classic()
+```
+
+
+##### Extraction de formes fortes : Une pré-classification des données
+
+
+L'un des intérêts des k-means est le peu de distances à calculer en comparaison d'autres algorithmes de classification (notamment la classification ascendante hiérarchique, CAH). Pour chaque tour de boucle, il y a $k\times n$ distances à calculer (Il faut calculer la distance de chaque individu à chaque centroïde). a l'inverse, une CAH a besoin de k(k-1)/2 distances à calculer à chaque étape, soit n(n$^2$-1)/3 au total. Si n augmente de façon importante, le temps de calcul de la CAH devient trop important pour être réalisé. Pour cela, il est possible de réaliser une extraction de forme forte en réalisant plusieurs k-means au préalable avec un nombre de groupe relativement important, mais faible par rapport aux nombres de données. On recoupe les résultats issus des différents k-means, qu'on agrège avant de les envoyer dans une CAH en précisant leur poids. On perd donc très peu en information en agrégeant uniquement des individus très proches mais d'ignorer les premières étapes d'agrégation de la CAH qui sont les plus lentes. 
+
+
+```{r,echo=F,fig.cap="Evolution du nombre de formes fortes selon le nom de répétition de k-means et le nombre de consolidation"}
+NbRepet<-c(3:15,25,35,50,75,100,125,150)
+# NbRepet<-c(1:5:150)
+data<-matrix(ncol=2,nrow=1,0)
+for(i in 1:length(NbRepet)){
+  clus<-c()
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10) 
+    clus<-cbind(clus,kc$cluster)
+  }
+  clus<-as.data.frame(clus)
+  clus$ID<-c("")
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10) 
+    clus$ID<-paste(clus$ID,clus[,j],sep="_")
+  }
+  data<-rbind(data,c(NbRepet[i],length(unique(clus$ID))))
+}
+data<-data[-1,]
+data<-as.data.frame(data)
+names(data)<-c("n","NbGpe")
+data$Consol<-c("Sans Consol")
+
+data2<-matrix(ncol=2,nrow=1,0)
+for(i in 1:length(NbRepet)){
+  clus<-c()
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10,nstart = 25) 
+    clus<-cbind(clus,kc$cluster)
+  }
+  clus<-as.data.frame(clus)
+  clus$ID<-c("")
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10) 
+    clus$ID<-paste(clus$ID,clus[,j],sep="_")
+  }
+  data2<-rbind(data2,c(NbRepet[i],length(unique(clus$ID))))
+}
+data2<-data2[-1,]
+data2<-as.data.frame(data2)
+names(data2)<-c("n","NbGpe")
+data2$Consol<-c("Avec Consol : 25")
+
+data<-rbind(data,data2)
+
+data2<-matrix(ncol=2,nrow=1,0)
+for(i in 1:length(NbRepet)){
+  clus<-c()
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10,nstart =50) 
+    clus<-cbind(clus,kc$cluster)
+  }
+  clus<-as.data.frame(clus)
+  clus$ID<-c("")
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10) 
+    clus$ID<-paste(clus$ID,clus[,j],sep="_")
+  }
+  data2<-rbind(data2,c(NbRepet[i],length(unique(clus$ID))))
+}
+data2<-data2[-1,]
+data2<-as.data.frame(data2)
+names(data2)<-c("n","NbGpe")
+data2$Consol<-c("Avec Consol : 50")
+
+data<-rbind(data,data2)
+
+data2<-matrix(ncol=2,nrow=1,0)
+for(i in 1:length(NbRepet)){
+  clus<-c()
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10,nstart =10) 
+    clus<-cbind(clus,kc$cluster)
+  }
+  clus<-as.data.frame(clus)
+  clus$ID<-c("")
+  for(j in 1:NbRepet[i]){
+    kc<-kmeans(df,10) 
+    clus$ID<-paste(clus$ID,clus[,j],sep="_")
+  }
+  data2<-rbind(data2,c(NbRepet[i],length(unique(clus$ID))))
+}
+data2<-data2[-1,]
+data2<-as.data.frame(data2)
+names(data2)<-c("n","NbGpe")
+data2$Consol<-c("Avec Consol : 10")
+
+data<-rbind(data,data2)
+
+p<-ggplot(data=data,aes(x=n,y=NbGpe,colour=Consol))+geom_point()+geom_line()+
+  theme_classic()+labs(y="Nombre de formes fortes",x="Nombre de répétitions de k-means")
+print(p)
+```
+
+On voit bien sur la figure différente qu'en recoupant les individus systématiquement dans les mêmes groupes au k-means on obtient un nombre de groupe qui augmente avec les k-means. Les variations qui peuvent sembler aléatoires sont liées au fait que le choix des individus est systématiquement aléatoires. Pour essayer de s'affranchir de ce problème des choix liés aux individus, la fonction *kmeans()* propose de tester plusieurs sets initiaux et ne conservent que celles les plus stables. Cela s'observe bien en modifiant le nombre de consolidation : Plus celle-ci est élevée, plus le nombre de formes fortes diminue. 
+
+### Classification Ascendante Hiérarchique (CAH)
+
+A l'inverse de la méthode des k-means, la CAH n'intègre pas d'aléatoire dans le rassemblement des individus. A chaque étape, elle agrège les individus/groupes d'individus les plus proches selon la méthode  et la distance choisies à chaque étape puis recommence avec les nouveaux groupes formées. Pour N individus, il y a donc n-1 étapes d'agrégations. On obtient un dendrogramme démontrant les individus/groupes regroupés à chaque étape, qui permet de résumer l'unique façon de regrouper les individus. Cette méthode est qualifiée d'ascendante car elle part de la décomposition maximale (1 individu = 1 groupe) à la minimale (tous les individus = 1 groupe). Par opposition, il existe des classifications descendantes qui réalisent le processus inverse (D'un groupe unique à tous les individus dissociés). 
+
+Cependant, ces dendrogrammes n'indiquent pas quelle est la meilleure répartition des individus (i.e. le nombre de clusters à conserver). Pour cela, il faut s'aider d'indicateurs pour décider de la meilleure partition possible (cf éléments plus haut). 
+
+Pour réaliser une CAH, il existe plusieurs fonctions capable de le réaliser. Après une analyse factorielle avec le package *FactoMineR*, il est possible d'utiliser la fonction *HCPC* qui accepte directement les objets issus des analyses factorielles précédentes (type ACP, ACM, etc...). 
+
+```{r,echo=F}
+data(decathlon)
+df<-decathlon
+res.PCA<- PCA(df, quanti.sup = 11:12, quali.sup=13,ncp=10,graph=F)
+```
+
+```{r,fig.cap="Arbre de classification obtenu précédemment sous forme d'arbre"}
+# On réalise cela à partir des résultats de l'ACP sur les données décathlon
+res.HCPC<-HCPC(res.PCA,nb.clust = -1,graph=F) 
+# nb.clust : Donne le nombre de cluster à conserver
+#           Si = -1, utilise indicateur interne pour choisir
+#           Si = 0, choix par 'utilisateur par point&click
+# graph : si = TRUE, affiche les 3 graphs possibles (présentés ci-dessous)
+# consol : réalise un k-means à posteriori sur les individus pour consolider les groupes
+# kk : réalise un kmeans à avant la CAH pour réduire le nombre de données
+#     si Inf : pas de k-means avant
+
+#On ne sort pas tous les graphs par défaut
+plot(res.HCPC,choice="tree") # Donne le dendrogramme avec les clusters obtenus
+
+```
+
+
+```{r,fig.cap="Représentation des résultats de la classification à partir de la représentation factorielle"}
+# Donne la projection des premiers individus sur les 
+#axes avec leur appartenance aux clusters
+plot(res.HCPC,choice="map")
+```
+
+
+```{r,fig.cap="Représentation des résultats de la classification en 3D à partir de la représentation factorielle"}
+#Permet d'avoir une réprésentation 3D du dendrogramme
+# par rapport au premier plan factoriel
+plot(res.HCPC,choice="3D.map") 
+```
+
+La fonction *HCPC()* permet de sortir de nombreux résultats intéressant à partir de la CAH, en appelant simplement l'objet où est enregistré le résultat. Les options permettent d'avoir des résultats intéressants :
+
+- *$data.clust* permet de récupérer le jeu de données ayant servi pour l'analyse factorielle et la CAH avec une colonne supplémentaire indiquant le cluster d'appartenance
+- *$desc.var* donne une représentation des groupes par les variables. Cela donne les variables significativement affectées par les groupes, en donnant les mesures observées, la moyenne globale, et la statistique de test. La valeur du v.test permet de savoir à quel point une variable est sur/sous-représentée dans un groupe. Plus la valeur est éloignée de zéro, plus elle est sur/sous-représentée. Une valeur positive indique une sur-représentation et une valeur négative une sous-représentation. 
+- *$desc.axes* reprend la même idée que précédemment mais avec les axes issus de l'analyse factorielle, et non les variables initiales. 
+- *$desc.ind* donne une représentation des groupes par les individus, en donnant les parangons (*$para*), c'est-à-dire les individus les plus proches du centroïdes du groupe (i.e., ceux qui représentant le mieux le groupe), et les individus les plus distants de chaque groupe (*$dist$*).
+- *$call* qui permet d'accéder à des informatins plus générales :
+    + *$t$res* qui permet d'avoir aux résultats de l'analyse factorielle 
+    + *$t$within* : l'inertie intra-classe selon le nombre de groupe (de 1 à n)
+    + *$t$within* : le gain d'inertie intra-classe en passant de (n+1 à n) (de 1 à n)
+    + *$t$quot* : la statistique testée selon le nombre de cluster possible suggéré
+    
+    
+
+
+
+Une autre possibilité plus généraliste est la fonction *hclust()*. Il faut cependant envoyer la matrice de distance à la fonction, qui peut se faire à l'aide de la fonction *dist()* (à laquelle on peut préciser la méthode de calcul du distance).
+
+```{r,fig.cap="Dendogramme obtenu à partir du calcul des distances"}
+distance<-dist(df[,1:10]) # On calcule les distance
+res.Clust<-hclust(distance) # On fait le calcul du dendrogramme
+plot(res.Clust)
+```
+
+
+Comme précédemment pour *HCPC()*, le dendrogramme indique les agrégations successives mais en donne pas d'indication sur la meilleure partition. Une fois le meilleure partitionnement choisi, il est possible d'indiquer où couper l'arbre à l'aide de la fonction *rect.hclust()*. Pour savoir la répartition des individus au seins des clusters, cela s'effectue avec la fonction *cutree()*. Il est possible d'améliorer l'esthétique du dendrogramme obtenu par les fonctions au sein du package *dendextend*. 
+
+```{r,fig.cap="Dendogramme obtenu en utilisant le critère de ward"}
+library(dendextend)
+plot(color_branches(hclust(distance,method="ward.D"), h = 4))
+
+```
+
+```{r,fig.cap="Dendogramme obtenu en utilisant le critère Single"}
+plot(color_branches(hclust(distance,method="single"), h = 4))
+```
+
+On peut également le faire à l'aide du package *factoextra*, qui permet de réaliser de nombreux graphiques prêt à l'emploi (par l'utilisation de ggplot2). Voici notamment deux exemples : 
+
+```{r,fig.cap="Exemple de rendu de dendogramme à l'aide du pacakge *factoextra*"}
+# On colore le dendrogramme
+fviz_dend(res.Clust,k=4,
+          cex=0.5,
+          k_colors = c("#8E9FDF","#00AFBB","#E7B800","#FC4E07"),
+          color_labels_by_k = T,
+          rect=T)
+```
+
+
+```{r,fig.cap="Exemple de rendu de plan factoriel à l'aide du pacakge *factoextra*"}
+grp<-cutree(res.Clust,k=4)
+data<-cbind(df$data.clust,grp)
+# On reprend la carte des 2 premeirs axes factoriels, avec les domaines des clusters
+fviz_cluster(list(data=df[,1:10],cluster=grp),
+             palette=c("#8E9FDF","#00AFBB","#E7B800","#FC4E07"),
+             ellipse.type = "convex",repel=T,
+             show.clust.cent = F,ggtheme = theme_classic())
+```
+
+Cette fonction permet également de personnaliser les dendrogrammes assez aisément et de proposer des dendrogrammes aux formes plus originales, comme montré ci-dessous
+
+```{r,fig.cap="Représentation d'un dendogramme sous forme circulaire"}
+fviz_dend(res.Clust,k=4,k_colors = c("#8E9FDF","#00AFBB","#E7B800","#FC4E07"),
+          color_labels_by_k = T,
+          rect=T,type="circular")
+
+```
+
+
+```{r,fig.cap="Représentation d'un dendogramme sous forme d'un arbre phylogénétique"}
+library(igraph) #package nécessaire pour la forme ci-dessous
+fviz_dend(res.Clust,k=4,k_colors = c("#8E9FDF","#00AFBB","#E7B800","#FC4E07"),
+          color_labels_by_k = T,
+          rect=T,type="phylogenic",phylo_layout = "layout.gem")
+```
+
+
+#### Vérifier la qualité du dendrogramme
+
+L'objectif est de vérifier si les distances au sein du dendrogramme sont bien en lien avec les distances initiales. On peut pour cela mesurer la distance entre distance initiale et celle obtenue par le dendrogramme. Il s'agit d'un coefficient de corrélation que l'on souhaite s'approcher de 1. Il est conseillé des valeurs supérieurs à 0.75 pour conserver une bonne idée des distances initiales. Pour cela, on utilise la fonction *copjenetic()* sur les résultats du dendrogramme. 
+
+```{r}
+res.coph<-cophenetic(res.Clust)
+cor.test(res.coph,distance)
+```
+
+Pour améliorer cette valeur, il est possible de changer la méthode d'agrégation des distances.
+
+
+
+#### Comparaison de Dendrogrammes
+
+
+Le package *dendextend* permet également de comparer les résultats de plusieurs classifications, qu'elles soient réalisées sur des variables différents ou des méthodes différentes, en comparant les dendrogrammes. Pour illustrer cela, on va prendre un même jeu de données mais en utilisant deux méthodes différentes d'agrégation. On peut déjà comparer les positions relatives de chacun des individus entre les deux dendrogrammes
+
+
+```{r,fig.cap="Comparaison de dendogrammes issu par la méthode de Ward ou centroïde"}
+res.Clust<-as.dendrogram(hclust(distance,method="ward.D2"))
+res.Clust2<-as.dendrogram(hclust(distance,method="centroid"))
+dend_list<-untangle(dendlist(res.Clust,res.Clust2)) 
+#untangle permet de "déméler" les dendrogrammes
+tanglegram(res.Clust,res.Clust2)
+```
+
+
+On peut regarder la corrélation entre une liste de dendrogramme à l'aide de la fonction *cor.dendlist()*:
+
+```{r}
+cor.dendlist(untangle(dend_list))
+```
+
+
+Si on souhaite comparer un plus grand nombre de dendrogramme, il est possible d'avoir des graphiques pour résumer les corrélations entre les dendrogrammes à la place d'un tableau graphique. Cela se fait à partir du tableau de corrélation obtenu par la fonction *cor.dendlist()* sur la liste des dendrogrammes. 
+
+```{r,echo=F}
+dend1<-distance %>% hclust("complete") %>% as.dendrogram
+dend2<-distance %>% hclust("ward.D") %>% as.dendrogram
+dend3<-distance %>% hclust("ward.D2") %>% as.dendrogram
+dend4<-distance %>% hclust("centroid") %>% as.dendrogram
+dend5<-distance %>% hclust("single") %>% as.dendrogram
+dend_list<-dendlist("Complete"=dend1,"Ward.D"=dend2,"Ward.D2"=dend3,
+                    "Centroid"=dend4,"Single"=dend5)
+```
+
+```{r,fog.cap="Comparaison des corrélations de classification selon 5 méthodes employées"}
+cors<-cor.dendlist(dend_list)
+# kable(cors,row.names = T)
+library(corrplot)
+corrplot(cors,"pie","lower")
+```
+
+
+### Autres méthodes de classification
+
+Aller voir approcha pragmatique de la classification de Nakache
+
+#### Classification descendante hiérarchique
+
+```{r,fig.cap="Exemeple de dendogramme obtenue par classification descendante hiérarchique"}
+res.HC<-diana(USAccDeaths)
+pltree(res.HC, cex = 0.6, hang = -1, main = "Dendrogram classification descendante")
+```
+
+
+#### PAM : Partitioning Arouds Medoids
+
+Cette méthode, aussi appelée méthodes k-medoïdes ressemble à la classification par k-means, si ce n'est que le centre de classe est représenté par un individu réel et non un centre de gravité. Cela rend la méthode moins sensible aux individus extrêmes. Celle-ci se réalise à l'aide de la fonction *pam()* qui fonctionne de manière similaire à *kmeans()*
+
+#### CLARA : Clustering Large Application
+
+CLARA est une extension de PAM pour les jeux de données de grandes tailles pour réduire les temps de calculs. Pour cela, l'algorithme prend un échantillon des données et y applique l'algorithme PAM pour générer un optimal d'individus initiaux. L'algorithme répète ces étapes un nombre donné de fois et choisi le set initial minimisant le biais. Ensuite, cela est réalisé sur tous les individus. 
+
+Pour réaliser cela, il faut utiliser la fonction *clara()*, mais qui demande plus de paramétrage que *pam* ou *kmeans*
+
+
+

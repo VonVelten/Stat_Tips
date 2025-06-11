@@ -1,0 +1,111 @@
+
+
+
+\section*{A propos de ce document :}
+
+Ce document est destiné à une utilisation interne à URSE uniquement. Merci de ne pas le diffuser, s'agissant d'un document interne de travail, et étant un document servant de notes pour la consultance en statistiques. Un document spécifique destiné aux étudiants est en cours d'élaboration. Ce document reprend des méthodes avancées et des notes assez particulières au travail de consultance mené dans URSE. 
+
+
+Pour chaque partie, il est précisé les packages nécessaires à installer pour faire tourner le code proposé. Il est également important d'installer les dépendances des packages pour que tout fonctionne. Des commentaires de code sont également ajoutés pour expliquer certains éléments particuliers lors de la mise en pratique sous R. 
+
+Attention, il ne s'agit pas d'un document apprenant à coder en R, mais donnant les éléments nécessaires pour réaliser certaines analyses. La majorité des analyses sont réalisées à partir de données déjà présentes dans R. 
+
+\pagebreak
+
+\section{Quelques définitions en vrac (et qu'on peut retrouver plus bas)}
+
+\subsection{Des notions mathématiques}
+
+
+\textbf{Moyenne :}
+
+
+
+**Variance :**
+
+**Moyenne harmonique $\tilde{\mu}$ :** La moyenne harmonique $\tilde{\mu}$ d'un échantillon de taille n associées aux valeurs {$x_1,x_2,....x_n$} est le nombre dont l'inverse est la moyenne arithmétique des inverses des dites valeurs :
+
+\begin{center}
+  $\tilde{\mu}=\frac{n}{\frac{1}{x_1}+\frac{1}{x_2}+...\frac{1}{x_n}}$
+\end{center}
+
+Si à chaque $x_i$ est associé un poids $w_i$ spécifique, son estimation devient alors :
+
+\begin{center}
+  $\tilde{\mu}=\frac{\sum_{i=1}^nw_i}{\sum_{i=1}^nw_ix_i}$
+\end{center}
+
+
+
+
+
+\subsection{Quelques notions de probabilités}
+
+
+ \subsubsection{Elements généraux}
+
+En dehors du théorème central limite sur lequel se base une grande partie des statistiques, plusieurs élèments de probabilités trouvent sens dans les analyses statistiques. La première est la définition de l'indépendance. Si on considère deux évènements A et B indépendants, alors $P(A\cap B)=P(A)\times P(B)$. A l'inverse, on sait que A est indépendant de B si $P(A|B)=P(A)$, c'est-à-dire que la réalisation de A ne dépend pas de B.  
+
+
+\subsubsection{Lois discrètes :}
+\begin{itemize}
+  \item Loi uniforme définie sur {1,...n}, alors pour k appartenant à cet ensemble, P(X=k)=$\frac{1}{n}$, E(X)=$\frac{n+1}{2}$, V(X)=$\frac{n^2-1}{12}$
+  \item Loi de Bernouilli/Binomiale, de paramètre (n,p), où n le nombre d'essai, et p la probabiltié que cela arrive sur 1 événement, défini sur [0;n] -> [0,1], P(X=k)=$C_k^np^k(1-p)^{n-k}$, E(X) = np, V(X)=np(1-p)
+  \item Loi de Poisson, de paramètre $\lambda$, défini sur [0;+$\infty$[ -> [0,1], P(X=k)=$\frac{\lambda^k}{k!}e^{-\lambda}$ . E(X)=$\lambda$, V(X)=$\lambda$
+  \item Loi Hypergéomtréique de paramètre (N,n,p), travaillant sur une population N dont on extrait une sous-population n, avec p la probabilité de l'événement d'intérêt. L'ensemble de définition de X dépend alors des valeurs de n et p choisies : {max(0;n-Nq),....,min(n,Np)}  On a alors P(X=k)=$\frac{C^k_NC^{n-x}_{N-Np}}{C^n_N}$, avec E(X)=$np$ et V(X)=$\frac{N-n}{N-1}np(1-p)$. Il est à noté que si N $\hookrightarrow \infty$, alors la loi tend vers une loi Binomiale classique.
+  \item Loi géométrique de paramètre p qui compte le nombre d'essai jusqu'à un succès, on A P(X)=$p(1-p)^{x-1}$, avec E(X)=$\frac{1}{p}$ et V(X)=$\frac{q}{p^2}$
+\end{itemize}
+
+
+
+\subsubsection{Lois continues :}
+
+- Loi Normale : de moyenne m et d'écart type$\sigma$, défini sur ]-$\infty$;+$\infty$[ -> [0,1], f(x)=$\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}(\frac{t-m}{\sigma})^2}$
+- Loi Uniforme, définie sur [a,b]. si $k \in [a,b]$, alors P(X$\leq$k)=$\frac{k-a}{b-a}$, avec E(X)=$\frac{b+a}{2}$ et V(x)=$\frac{(b-a)^2}{12}$
+- Loi Exponentielle de paramètre $\lambda$ définie sur [0,$\infty$[. f(x)=$\lambda e^{-\lambda x}$ pour tout x positif, et E(X)=$\frac{1}{\lambda}$ et V(X)=$\frac{1}{\lambda^2}$
+
+
+
+
+\subsection{Sur des variables qualitatives}
+
+
+\textbf{Odds ratio (OR) :} également appelé rapport de cotes. 
+
+On peut l'obtenir à partir d'un tableau de contingence, ici réussite à un examen selon le fait d'avoir révisé ou pas (Cf : Episode 11 de la chaine \href{https://www.youtube.com/watch?v=eB1FMSCD5zc&t=28s}{le risque $\alpha$})
+
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{l|cc}
+  & Réussite à l'examen & Echec à l'examen \\
+  \hline
+  Révision & 450 &50 \\
+  Pas de révision & 350 & 150 \\
+  \end{tabular}
+  \caption{Tableau de contingence sur la réussite à un examen}
+\end{table}
+
+Dans ce cas, OR vaut 450/50 sur 350/150, soit 9/2.33, donc OR = 3.86. 
+
+\textbf{Risque Relatif (RR) :} Ratio des risques entre le traitement et le contrôle. Dans le cas du tableau exposé pour l'OR, c'est 450/500 et 350/500. Ce qui donne un RR de 0.9/0.7 = 1.28. Il y a une augmentation de 28\% des chances de réussir ses examens en révisant. 
+
+Cependant, le RR n'est pas toujours calculable, contrairement à l'OR. Ils sont tous deux des tailles d'effet. Si les risques sont rares, OR et RR sont souvent très proches. 
+
+
+\textbf{Needed Number to Treat (NNT)  :} Principe assez simple, combien de sujet à traiter pour changer le résultat de 1 (Nombre de personne à soigner avec le traitement pour en soigner une de plus que dans le groupe contrôle). Il se calcule de la manière suivante :
+
+\begin{center}
+  $NNT = \frac{1}{\frac{Nbre Succès_ Traitement_t}{n_T}-\frac{Nbre Succès_C}{n_C}}$
+\end{center}
+
+si on prend le cas du tableau exprimé pour les OR, on obtien un NNT de 1/(0.9-0.7)=5. Il faut donc que 5 personnes révisent pour qu'une de plus ait son examen. 
+
+
+Cependant, parfois quelques utilisations abusives du NNT, et pas mal de problème dans la définition de son intervalle de confiance comme décrit par \cite{hutton_number_2000}. \cite{hutton_number_2000} a proposé une autre définition du NNT à partir de $\pi_T$, proportion de succès dans le groupe Traitement :
+
+\begin{center}
+  $NNT=\frac{1-\pi_t{1-1/OR}}{\pi_T(1-\pi_T)(1-1/OR)}$
+\end{center}
+
+Le problème principal est l'estimation de l'intervalle de confiance. Cet intervalle n'est en effet pas symétrique car le NNT ne suit pas une loi normale.  De plus, par définition, le NNT ne peut valoir 0. Du coup, quand le NNT s'approche de zéro, des problèmes conceptuels apparaissent et rendent son utilisation très difficiles. De même, quand le NNT tend vers des grandes valeurs, son interprétation reste compliquée. 

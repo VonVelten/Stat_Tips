@@ -1,0 +1,470 @@
+
+
+Il ne s'agit as forcément de la "survie" au sens premier du terme (c'est-à-dire survenue de la mort d'un individu). Il s'agit plutôt de l'étude de la survenue d'un événement au cours du temps, comme l'apparition d'une maladie suite à une exposition, reprise d'une activité. Notes issues du cours de Michaël Genin disponibles en ligne (Introduction à l'analyse de survie, Université de Lille 2, accessible  \href{http://cerim.univ-lille2.fr/fileadmin/user_upload/statistiques/michael_genin/Cours/Modelisation/Introduction_Survie_printable.pdf}{\textcolor{blue}{via ce lien}})
+
+
+## Cadre des analyses
+### Quelques définitions sur le sujet
+\begin{itemize}
+		\item Date d'Origine (DO): Date d'entrée dans l'étude de l'individu considéré.
+		\item Date de Dernières Nouvelles (DDN) : Date la plus récente où il y a des informations sur l'individu (Si survenue de l'événement, DDN = moment de survenue de l'événement)
+		\item Délai de surveillance : Différence entre DO et DDN
+		\item Temps de Participation (TP) : 2 cas possible
+		\begin{itemize}
+			\item On fixe \textit{à priori} la date du bilan de l'étude. On se s'intéresse plus aux individus après ce moment fixé, appelé Date de Point (**DP**)
+			\item On fixe \textit{a priori} la durée d'observation potentielle d'un individu pour l'étude. Dans ce cas, le TP maximal est celui fixé à l'avance
+			
+			
+\begin{figure}[!h]
+		\centering
+		
+				\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,8,10.5}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (10.5,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (4,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (8,0.5);
+			\draw[dashed,blue] (8,0.5) -- (10.5,0.5);
+		\end{tikzpicture}
+
+		\bigskip		
+		
+		\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,6,8}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (6,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (3,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (6,0.5);
+		\end{tikzpicture}
+		\caption{2 Cas de l'estimation du temps de participation (TP)}
+\end{figure}
+
+		\end{itemize}
+		\item Perdu de vue (PV) : Individu dont on ne connaît pas l'état à la DP mais qu'on sait qu'il n'avait pas fait face à l'événement d'intérêt à la DDN
+		\item Exclu Vivant (EV) : Individu n'ayant pas fait face à l'événement à la DP
+\end{itemize}	
+		
+		
+		
+		
+		
+
+### Des données qui peuvent être censurées
+		
+
+Les données peuvent êtres censurées à droite, dans le cas où l'individu n'a pas présenté l'événement à sa dernière observation.  Dans ces cas, les observations sont incomplètes. La durée de vie n'est pas totalement observée.
+
+\begin{itemize}
+	\item Perdu de vue (PV) : Individu dont on ne connaît pas l'état à la DP 
+	
+	
+	\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,6,8}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (6,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (3,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			\node (Vivant) at (6,1) {\textit{Vivant}};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (6,0.5);
+		\end{tikzpicture}
+		
+	\item Exclu vivant : l'individu est toujours en vie après la DP, moment d'arrêt du suivant
+	
+		
+	\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,8,10.5}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (10.5,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (4,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			\node (Vivant) at (8,1) {\textit{Vivant}};
+
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (8,0.5);
+			\draw[dashed,blue] (8,0.5) -- (10.5,0.5);
+		\end{tikzpicture}
+
+\end{itemize}
+
+Si le délai entre DO et DP est aléatoire, on parle de censure aléatoire. Les individus entrant dans l'étude de manière aléatoire. De façon plus précise, on définit trois types de censure de la façn suivante :
+	 
+\begin{enumerate}
+	  \item La censure de type I, qui correspond à un exclu vivant
+	  \item La censure de type II. On suit dans ce cas les n individus jusqu'à que k événements arrivent. 
+	  \item La censure de type III, qui correspondent à la censure aléatoire (dite de type I)
+\end{enumerate}
+	 
+Il est également possible d'avoir des censures à gauche. cela signifie que l'individu observé a déjà subi l'événement avant d'être observé. On sait alors que la date de survenue de l'événement est donc inférieure à une date connue. 
+	 
+### Que peut-on faire avec de l'analyse de survies ?
+
+Posons $T_i$ la variable aléatoire qui associe à un individu i, $i \in [1,n]$ son temps de survie ($T_i \leq 0$). On cherche à déterminer sa distribution $f(t)$ ou encore sa fonction de répartition $F(t)=P[T<t]$.
+
+On en déduit la fonction de survie $S(t)$ (ou courbe de survie), définit par $S(t)= P[T \geq t]$. $S(t)$ est une fonction monotone décroissante, telle que $S(0)=1$ et lim $S(t)=1$ quand $t\rightarrow \infty$. La fonction quantile du temps de survie est définie par $Q(p)$ = inf$\{t:S(t)\leq p \} ,p\in ]o,1]$. C'est à dire qu'on garde la plus petite valeur de \textit{t} vérifiant la condition $S(t) \leq p$.
+	 
+	 
+**L'objectif de l'analyse de survie** est d'estimer S$(t)$. Pour cela, il existe 3 types d'analyse de survie :
+\begin{enumerate}
+	 	\item Méthodes non-paramétriques (Kaplan Meieir)
+	 	\item Méthodes semi-paramétriques (Modèle de Cox)
+	 	\item Méthodes paramétriques (Modèle exponentiel, Weibul).
+	\end{enumerate}
+	
+Seulement, seules les deux dernières permettent la prise en compte de variables explicatives. 
+	 	
+	 	
+Lors de l'analyse de survie, on peut également s'intéresser à d'autres éléments, comme :
+	 	
+\begin{itemize}
+	 	  \item le Risque instanté $\alpha$, aussi appelé taux d'incidence. Pour $t$ fixé, cela caractérise la probabilité de mourir dans un intervalle de temps après $t$, conditionnellement au fait d'avoir survécu jusqu'au temps $t$.
+	 	  
+	 	  $\lambda(t)=\frac{f(t)}{S(t)}=-ln(S(t))'$
+	 	  
+	 	  \item le Taux de hasard cumulé $\bigwedge$, défini comme l'intégrale du risque instatané $\lambda$ entre le DO et $t$, ce qui donne que $\bigwedge (t)=-ln(S(T))$. 
+	 	  
+\end{itemize}
+
+
+
+## Méthode non paramétrique
+	
+	 La plus utilisée reste la méthode de Kaplan-Meieir. On cherche donc à estimer $S(t)$. Cependant ce n'est possible qu'à chaque décès observé. On suppose donc $S(t)$ constant entre chaque temps de décès. Petit Exemple de tableau de données pour ce cas:
+	 
+\begin{table}[!h]
+  \centering
+	  \begin{tabular}{ccc}
+	  \hline
+	  Sujet & Temps de Survie en jours & Etat \\
+	  \hline
+	  1 & 3&DC(1)\\
+	  2&4&V(0)\\
+	  3&6&DC(1)\\
+	  4&6&DC(1)\\
+	  5&7&DC(1)\\
+	  \hline
+	 \end{tabular}
+	 \caption{Exemple de tableaux de données utilisées en analyse de survie}
+\end{table}
+
+
+### Méthode de Kaplan-Meier
+
+
+
+
+**Objectif :** pour estimer $S(t_j)$ on va estimer, à partir des données, les $Q_i$,$i\leq j$. 
+
+Si on considère $t_j$ et $t_{j-1}$. Posons :
+\begin{itemize}
+    \item $n_j$ : nombre de sujets exposés en $t_j$ (encore vivants avant $t_j$)
+    \item  $m_j$ : nombre de sujets décédés en $t_j$
+\end{itemize}
+    Donc en $t_j$ il reste encore $n_j$-$m_j$ individus encore vivants. Une estimation de $Q_j$ est donné par :
+    
+\begin{center}
+      $q_j=\frac{n_j-m_j}{n_j}$
+\end{center}
+    
+aussi, une estimation de $S(t_j)=\prod_{i:t_i\leq t_j}\frac{n_i-m_i}{n_i}$
+
+
+
+```{r,echo=FALSE,fig.width=7,fig.heigt=4,fig.cap="Exemple de courbe de survie par la méthode de Kaplan-Meier"}
+library(survival)
+mydata.surv=Surv(time=c(rep(10,50),round(runif(n=30,min=1,max=8))),
+                 event=c(rep(0,50),rep(1,30)),
+                 origin=0,
+                 type="right")
+# summary(survfit(mydata.surv~1, conf.type="plain"))
+plot(survfit(mydata.surv~1, conf.type="none"),  col="blue", lwd=1,
+     xlab='Temps en jours',ylab='Taux de survie')
+```
+
+
+
+### Méthode actuarielle
+
+Cette méthode est essentiellement pratique lorsque le nombre d'évènements observés est élevé (beaucoup de $t_j$), car le graphique de Kaplan-Meier devient alors illisible. Le principe reste cependant de celui de Kaplan-Meier. Les principales différences sont :
+\begin{itemize}
+  \item On ne dispose pas des dates précises de décès
+  \item L'échelle de temps est découpée en intervalle de temps égaux fixés à priori
+\end{itemize}
+
+Dans ce cas, les probabilités conditionnelles $Q_j$ sont estimées pour chaque intervalle de temps. Malheureusement, cette méthode ne semble pas implémentée dans le package **survival**, qui permet les analyses sous R. 
+
+
+### Réalisations sour R
+
+
+Pour les analyses de survie sous R, on utilise le package **survival** qui va permettre l'analyse de la majorité des données (cas simples). 
+
+
+```{r}
+# On charge les packages dont on a besoin
+library(survival)
+library(survminer)
+# On charge un jeu de données simple
+data(lung)
+head(lung)
+
+# On crée les données de survie
+## En premier le dernier moment d'observation
+## En second si l'individu était encore en vie ou absent
+data.Surv<-Surv(lung$time, lung$status)
+
+# On calcule la courbe de survie globale de la population
+fit <- survfit(data.Surv ~ 1, data = lung)
+# On demande la fonction de répartition (pas d'impression ca rtrès grande)
+#summary(fit)
+# Access to the sort summary table
+summary(fit)$table
+```
+
+
+
+Les sorties obtenues par la fonction 'summary()' sont :
+\begin{itemize}
+  \item time : temps pour la courbe
+  \item n.risk: nombre d'individus sujets au risque au temps t
+  \item n.event: nombre d'événements qui ont eu lieu au temps t
+  \item survival: taux de survie au temps t
+  \item std.err: écart-type
+  \item lower/uper 95\% CI: intervalle de confiance à 95\% de l'estimation
+\end{itemize}
+
+	 
+	 
+Si on affiche l'objet obtenu par la fonction *survfit()*, on obtient la médiane de survie. Cependant, si moins de 50% des individus ont obtenu cet événement, son estimation tend vers l'infini car il n'y a pas eu assez de survenu de l'événement pour l'estimer sans risque. 
+
+	 
+
+## Méthode semi-paramétrique
+
+
+
+### Comparaison de courbe de survie
+
+
+
+```{r}
+# On calcule la courbe de survie globale par sexe
+fit <- survfit(Surv(time, status) ~ sex, data = lung)
+# Access to the sort summary table
+summary(fit)$table
+```
+
+
+On obtient les mêmes sorties dans le cas du summary, mais dissociées par sexe (variable explicative dans notre cas). 
+Les sorties obtenues par la fonction \textit{summary} sont :
+\begin{itemize}
+  \item time : temps pour la courbe
+  \item n.risk: nombre d'individus sujets au risque au temps t
+  \item n.event: nombre d'événements qui ont eu lieu au temps t
+  \item survival: taux de survie au temps t
+  \item std.err: ecart type
+  \item lower/uper 95\% CI: intervalle de confiance à 95\% de l'estimation
+\end{itemize}
+
+
+### Méthode du log-rank
+
+**Condition de validité :** nombreux de temps de décès ou nombreux morts à chaque temps de décès. 
+
+```{r}
+survdiff(Surv(time, status) ~ sex, data = lung)
+```
+
+Ici, différence de cancer du poumon entre hommes et femmes. Il y a une différence dans la survie entre homme et femme sur la survie du poumon. 
+
+
+Il est possible de stratifier les données. Par exemple, si les diagnostiques ont été réalisées dans différentes cliniques et que l'on sait qu'il existe de potentiel biais liés à cela (car pas même proximité à des sources d'exposition par exemple). 
+
+```{r}
+# On ajoute trois hôpitaux possibles pour le lieu d'établissement du diagnostique
+Clinic.Choix<-c("H1","H2","H3")
+lung$Clinic<-sample(Clinic.Choix,size=228,replace=T)
+survdiff(Surv(time, status) ~ sex+strata(Clinic), data = lung)
+```
+
+Cela peut permettre de réduire la part de variabilité non expliquée par le modèle. 
+
+### Modèle de Cox 
+
+
+Si on intègre une ou plusieurs variables explicatives quantitatives, on utilise dans ce cas un modèle de Cox. On peut cependant intégrer tout de même des variables qualitatives.  
+
+```{r}
+coxph(Surv(time, status) ~ age, data = lung)
+```
+
+On observe ici qu'il y a un effet significatif de l'âge (p=0.039) sur le risque d'avoir un poumon de cancer. Le coefficient est positif (0.018720), donc le risque d'avoir un cancer du poumon augmente avec l'âge.
+
+
+On peut ensuite tester plusieurs variables explicatives sur la variable à expliquer, comme l'âge et le sexe. 
+
+
+```{r}
+coxph(Surv(time, status) ~ age+sex, data = lung)
+```
+
+Ici, seulement le sexe a un effet significatif sur l'occurrence d'avoir un cancer du poumon. Pour l'âge, il y a seulement une tendance. 
+
+Pour interpréter les coefficients, on regarde l'exponentiel (notamment pour les variables binaires). L'exponentiel de ce coefficient, $e^{-0.51}$, vaut environ 0.60. Les femmes ont donc 40%  de chance en moins d'avoir un cancer par rapport à un homme. Il s'agit d'un *hazard ratio*, ou rapport des risques instantanées d'apparition de l'évènement. 
+
+
+### Selection du meilleur modèle de Cox
+
+sur le critère d'AIC (qu'on cherche à minimiser), on peut comparer les modèles un par un, mais seulement s'ils ont les mêmes données d'entrées. :
+
+
+```{r}
+extractAIC(coxph(Surv(time, status) ~ age*sex, data = lung))[2]
+extractAIC(coxph(Surv(time, status) ~ age+sex, data = lung))[2]
+extractAIC(coxph(Surv(time, status) ~ sex, data = lung))[2]
+extractAIC(coxph(Surv(time, status) ~ age, data = lung))[2]
+```
+
+
+Dans ce cas, le meilleur modèle est celui incluant les effets principaux liés à l'age et au sexe, mais pas leur interaction. On peut le faire aussi de façon stepside avec plutôt du 
+
+
+```{r}
+library(MASS)
+fit1<-coxph(Surv(time, status) ~ 1, data = lung)
+fit2<-coxph(Surv(time, status) ~ age*sex, data = lung)
+# Problème si des données manquantes 
+#-> Retirer les données manquantes ? 
+#Car besoin des mêmes données car sinon AIC ne peut être utilisé. 
+stepAIC(fit1,scope=list(upper=fit2,lower=fit1),
+        direction="both")
+```
+
+
+
+### Condition de validité du modèle de Cox
+
+  - un nombre suffisant d'événements (5 à 10 par variable explicative au minimum)
+  - Hypothèse des risques instantanés proportionnels. Pour cela, on peut regarder cela graphiquement  (plot(cox.zph(mod)). Il faut avoir des droites qui sont relativement horizontales. 
+  
+  
+  
+```{r,fig.height=10,fig.cap="Hypothèse des risques instantanés proportionnels pour un modèle de Cox en analyse de Survie"}
+par(mfrow=c(2,1))
+plot(cox.zph(coxph(Surv(time, status) ~ age+sex, data = lung)))
+```
+  
+
+On peut également vérifier cela par la fonction *print()* spécifique à ce cas
+
+```{r}
+print(cox.zph(coxph(Surv(time, status) ~ age+sex, data = lung)))
+```
+
+Il faut pour cela que $H_0$, à savoir l'hypothèse des risques instantanés proportionnels ne soient pas rejeter (Ce qui est le cas ici). L'hypothèse revient à dire que le rapport de risque instantané entre deux individus ne dépend pas du temps. 
+
+### Représentation graphique
+
+Cela se réalise à l'aide du package **surveminer**. Pour des variables catégorielles, on peut 
+
+```{r,fig.cap="Comparaison des survies selon le sexe",width=10,height=8}
+fit<-survfit(Surv(time, status) ~ sex, data = lung)
+ggsurvplot(
+   fit,                     # survfit object with calculated statistics.
+   pval = TRUE,             # show p-value of log-rank test.
+   conf.int = TRUE,         # show confidence intervals for 
+                            # point estimaes of survival curves.
+   conf.int.style = "step",  # customize style of confidence intervals
+   xlab = "Time in days",   # customize X axis label.
+   break.time.by = 200,     # break X axis in time intervals by 200.
+   ggtheme = theme_light(), # customize plot and risk table with a theme.
+   risk.table = "abs_pct",  # absolute number and percentage at risk.
+  risk.table.y.text.col = T,# colour risk table text annotations.
+  risk.table.y.text = FALSE,# show bars instead of names in text annotations
+                            # in legend of risk table.
+  ncensor.plot = FALSE,      # plot the number of censored subjects at time t
+  surv.median.line = "hv",  # add the median survival pointer.
+  legend.labs = 
+    c("Male", "Female"),    # change legend labels.
+  palette = 
+    c("#E7B800", "#2E9FDF")# custom color palettes.
+)
+```
+
+
+Exemple d'un jeu de données factices, où on sait que le traitement permettra une meilleure survie
+
+```{r}
+Temp<-c(rep(10,30),round(runif(n=50,min=1,max=8)),
+        rep(10,10),round(runif(n=70,min=1,max=8)))
+Statut<-c(rep(1,30),rep(2,50),
+          rep(1,10),rep(2,70))
+Groupe<-as.factor(c(rep("Trait",80),rep("Placebo",80)))
+
+Data<-as.data.frame(Temp)
+Data$Statut<-Statut
+Data$Groupe<-Groupe
+
+survfit(Surv(Data$Temp, Data$Statut)~Data$Groupe)
+survdiff(Surv(Data$Temp, Data$Statut)~Data$Groupe)
+
+fit<-survfit(Surv(Temp, Statut)~Groupe,data=Data)
+ggsurvplot(
+   fit,                     # survfit object with calculated statistics.
+   pval = TRUE,             # show p-value of log-rank test.
+   conf.int = TRUE,         # show confidence intervals for 
+                            # point estimaes of survival curves.
+   conf.int.style = "step",  # customize style of confidence intervals
+   xlab = "Time in days",   # customize X axis label.
+   break.time.by = 1,     # break X axis in time intervals by 200.
+   ggtheme = theme_light(), # customize plot and risk table with a theme.
+   risk.table = "abs_pct",  # absolute number and percentage at risk.
+  risk.table.y.text.col = T,# colour risk table text annotations.
+  risk.table.y.text = FALSE,# show bars instead of names in text annotations
+                            # in legend of risk table.
+  ncensor.plot = FALSE,      # plot the number of censored subjects at time t
+  surv.median.line = "hv",  # add the median survival pointer.
+  legend.labs = 
+    c("Placebo", "Traitement"),    # change legend labels.
+  palette = 
+    c("#E7B800", "#2E9FDF")# custom color palettes.
+)
+```
+
+
+## Méthode paramétrique
+
+Modèle exponentiel et de Weibul. 
+
+

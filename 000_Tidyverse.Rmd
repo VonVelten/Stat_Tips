@@ -1,0 +1,42 @@
+```{r}
+Sys.setenv(LANGUAGE  =  "en")  # Pour avoir les messages d'erreur en anglais
+#dput() => Permet de créer une ligne de commande à partir d'un jeu de données
+library(tidyverse)
+install.packages(c("nycflights13", "gapminder", "Lahman"))
+# library(c("nycflights13", "gapminder", "Lahman"))
+
+# Alt + Shifht + K => Raccourci des commandes
+
+```
+
+
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+data(flights)
+
+delays <- flights %>%  group_by(dest) %>%  summarize(    count = n(),
+    dist = mean(distance, na.rm = TRUE),    delay = mean(arr_delay, na.rm = TRUE)  ) %>%  filter(count > 20, dest != "HNL")
+
+not_cancelled <- flights %>%  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+
+# filter => permet séletion sur les jeux de données
+# arrange => réordonne les données
+# select -> permet de ne conserver que certaines variables
+##        starts_with()
+##        ends_with()
+##        contains()
+##        matches()
+# rename => change le nom d'une variable
+# mutate -> crée des nouvelles variables
+# transmute -> crée des noubelles variables mais ne garde que celle-ci. 
+
+#lag et lead => pour avoir décallage des valeurs
+# cumsim() et cummean() => somme cumulée et oyenne à l(instant dans le vecteur.
+
+# group_by() permet de préparer un regroupeùment de donnée
+# on peut alors utiliser summarize(data,nouvelle variable, avec des fonctions comme mean, n(), etc..)
+```
+

@@ -1,0 +1,162 @@
+
+
+```{r,echo=F}
+library(dplyr)
+
+
+# a executer la première fois
+# library(BiocManager)
+# BiocManager::install("EBImage",force = T)
+library(EBImage)
+```
+
+Quelques liens
+
+https://bioconductor.org/packages/release/bioc/html/EBImage.html
+
+https://bioconductor.org/packages/release/bioc/vignettes/EBImage/inst/doc/EBImage-introduction.html#1_Getting_started
+
+https://www.youtube.com/watch?v=A29IqeahI84&t=1448s
+
+
+# Importer l'image
+
+les fonctions de bases d'EBimage permettent de lire, écrire et afficher des images. On utilise pour cela la fonction *readImage()*.
+
+```{r}
+f = system.file("images", "sample.png", package="EBImage") # On recherche la location de l'image
+img = readImage(f) # Importation de l'image
+display(img) # Affichage via web 
+# display(img,method="raster") # Affichage uniquement dans R 
+```
+
+
+Avec EBI, possible de travailler avec les formats jpeg, png et tiff. Le package **RBioFormats** permet d'utiliser d'autres formats de fichiers. 
+
+Si utiisation de Rstudio, le premier des zooms ou de l'ouvrir dans un navigateur web, . O, Peut utiliser souris et clavier pour zoomer/déplacer l'image
+
+
+```{r}
+# On charge la même en couleur
+imgcol = readImage(system.file("images", "sample-color.png", package="EBImage"))
+display(imgcol)
+```
+
+
+# Caractéristiques 
+
+EBImages => utilise une classe spécifique : **Image** pour travailler. Il s'agit d'une extention de la classe **array*. Les images sont des tableaux multidimensionnels. 
+
+```{r}
+# POur avoir des infos sur la classe
+# ?Image
+str(img)
+str(imgcol)
+```
+
+
+
+On voit que nos images sont en deux dimensions, avec une résolution de 768 x 512. On sait également si l'image est en couleur ou en noir et blanc (colormode). Deux valeurs possible : Grayscale (ou 0) et Color (ou 2). Ce choix induit des différences dans les structures des données 
+
+- En Grayscale, on travaille sur un seul tableau de dimension correspondant à la taille de l'image. Chaque valeur correspond à une échelle entre noir (0) et blanc (1).  
+
+- en Color, on travaille sur un tableau à 3 dimensions. Les deux premières sont de même dimension que précédémment  (taille de l'image). La troisième représente une des trois couleurs utilisées pour encoder l'image (rouge, vert et bleu) et la valeur indique l'intensité de la couleur, de 0 (très faible), à 1 (très forte). 
+
+
+On peut d'ailleurs s'amuser à modifier les valeurs des tableaux pour retoucher les images. Pour cela, il suffit d'utiliser la fonction *imageData()*, pour accéder aux tableaux de données permettant les images
+
+
+```{r}
+
+# Sur une image en noir et blanc
+Res<-img
+imageData(Res)[1:40,1:40]<-0 # On ajoute un carré noir
+display(Res)
+
+# Sur une image en couleur
+Res<-imgcol
+imageData(Res)[50:120,50:120,3]<-0.6 # On aumente l'intensité en bleu sur un carré
+display(Res)
+
+# On peut également créer le négatif de l'image
+Res<-imgcol
+Tab<-array(1,c(768,512,3))
+imageData(Res)<-Tab-imageData(Res)
+display(Res,method="raster")
+
+
+# On peut aussi réduire le nombre de pixel
+Res<-imgcol
+display(Image(imageData(Res)[seq(2,768,6),seq(2,512,6),1:3],colormode = 2),method="raster")
+```
+
+
+Dans la dernière solution, on crée un tableau à trois dimensions que l'on retransforme en image à l'aide de la fonction *Image()*, en précisant qu'on utilise une image en couleur (donc trois dimenensions), avec l'option *colormoade=2*. 
+
+```{r}
+# Si on ne précise pas colormode = 2
+# On obtient 3 images différentes
+Res<-imgcol
+display(Image(imageData(Res)[seq(2,768,6),seq(2,512,6),1:3]),method="raster",all=T)
+```
+
+
+
+On peut également s'intéresser à la répartition des intensités avec la fonction *hist()*, appliquée directement sur l'image. 
+
+```{r}
+# SUr une image en noir et blanc, un seul histogramme
+hist(img)
+# Sur une image en couleur, on obtient des histogrammes pour chacune des trois couleurs
+hist(imgcol)
+```
+
+
+
+On peut également avoir les informations principales en appelant directement les objets. 
+
+
+```{r}
+img
+imgcol
+```
+
+
+
+# Filtres
+
+
+```{r}
+w = makeBrush(size = 3, shape = 'line', sigma = 5)
+# plot(w[(nrow(w)+1)/2, ], ylab = "w", xlab = "", cex = 0.7)
+
+img_flo = filter2(img, w)
+display(img_flo)
+```
+
+
+
+```{r}
+fhi = matrix(1, nrow = 3, ncol = 3)
+fhi[2, 2] = -7.85
+img_fhi = filter2(imgcol, fhi)
+display(img_fhi)
+```
+
+
+
+```{r}
+l = length(img)
+n = l/8
+pixels = sample(l, n)
+img_noisy = imgcol
+img_noisy[pixels] = runif(n, min=0, max=1)
+display(img_noisy)
+```
+
+```{r}
+img_median = medianFilter(img_noisy, 2)
+display(img_median)
+display(imgcol)
+```
+

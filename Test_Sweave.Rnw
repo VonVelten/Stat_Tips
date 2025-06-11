@@ -1,0 +1,189 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+
+\tableofcontents
+
+\listoffigures
+
+\listoftables
+
+
+
+
+\pagebreak
+
+\section{Analyse de Survie}
+
+Pas forcément de la "survie" au sens premier du terme (c'est-à-dire survenue de la mort d'un individu). Il s'agit plutôt de l'étude de la survenue d'un événement au cours du temps, comme l'apparition d'une maladie suite à une exposition, reprise d'une activité. Notes issues du cours de Michaël Genin disponibles en ligne (Introduction à l'analyse de survie, Université de Lille 2, accessible  \href{http://cerim.univ-lille2.fr/fileadmin/user_upload/statistiques/michael_genin/Cours/Modelisation/Introduction_Survie_printable.pdf}{\textcolor{blue}{via ce lien}})
+
+\subsection{Cadre des analyses}
+\subsubsection{Quelques définitions sur le sujet}
+	\begin{itemize}
+		\item Date d'Origine (DO): Date d'entrée dans l'étude de l'individu considéré.
+		\item Date de Dernières Nouvelles (DDN) : Date la plus récente où il y a des informations sur l'individu (Si survenue de l'événement, DDN = moment de survenue de l'événement)
+		\item Délai de surveillance : Différence entre DO et DDN
+		\item Temps de Participation (TP) : 2 cas possible
+		\begin{itemize}
+			\item On fixe \textit{à priori} la date du bilan de l'étude. On se s'intéresse plus aux individus après ce moment fixé, appellé Date de Point (\textbf{DP})
+			\item On fixe \textit{a priori} la durée d'observation potentielle d'un individu pour l'étude. Dans ce cas, le TP maximal est celui fixé à l'avance
+			
+			
+			\begin{figure}[!h]
+		\centering
+		
+				\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,8,10.5}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (10.5,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (4,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (8,0.5);
+			\draw[dashed,blue] (8,0.5) -- (10.5,0.5);
+		\end{tikzpicture}
+
+		\bigskip		
+		
+		\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,6,8}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (6,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (3,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (6,0.5);
+		\end{tikzpicture}
+		\caption{2 Cas de l'estimation du temps de participation (TP)}
+	\end{figure}
+
+	
+		\end{itemize}
+		\item Perdu de vue (PV) : Individu dont on ne connaît pas l'état à la DP mais qu'on sait qu'il n'avait pas fait face à l'événement d'intérêt à la DDN
+		\item Exclu Vivant (EV) : Individu n'ayant pas fait face à l'événement à la DP
+		\end{itemize}	
+		
+		
+		
+
+\subsubsection{Des données qui peuvent être censurées}		
+		
+
+Les données peuvent êtres censurées à droite, dans le cas où l'individu n'a pas présenté l'événement à sa dernière observation.  Dans ces cas, les observations sont incomplètes. La durée de vie n'est pas totalement observée.
+
+\begin{itemize}
+	\item Perdu de vue (PV) : Individu dont on ne connaît pas l'état à la DP 
+	
+			\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,6,8}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (6,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (3,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			\node (Vivant) at (6,1) {\textit{Vivant}};
+			
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (6,0.5);
+		\end{tikzpicture}
+		
+	\item Exclu vivant : l'individu est toujours en vie après la DP, moment d'arrêt du suivant
+	
+		
+	\begin{tikzpicture}	
+			%draw horizontal line
+			\draw [->] (0,0) -- (12,0);
+			\foreach \x in {0,8,10.5}
+				\draw(\x cm, 3pt) -- (\x cm, -3pt);
+
+			% Draw nodes
+			\node (DO) at (0,-0.5) {DO};
+			\node (DDN) at (10.5,-0.5) {DDN};
+			\node (DP) at (8,-0.5) {DP};
+			\node (TP) at (4,1) {TP};
+			\node (Temps) at (12.5,0.5) {Temps};
+			\node (Vivant) at (8,1) {\textit{Vivant}};
+
+			% Draw Arrows
+			\draw[<->,blue] (0,0.5) -- (8,0.5);
+			\draw[dashed,blue] (8,0.5) -- (10.5,0.5);
+		\end{tikzpicture}
+
+\end{itemize}
+
+	 Si le délai entre DO et DP est aléatoire, on parle de censure aléatoire. Les individus entrant dans l'étude de manière aléatoire. 
+	 
+	 
+\subsubsection{Que peut-on faire avec de l'analyse de survies ?}
+
+Posons $T_i$ la variable aléatoire qui associe à un individu i, $i \in [1,n]$ son temps de survie ($T_i \leq 0$). On cherche à déterminer sa distribution $f(t)$ ou encore sa fonction de répartinion $F(t)=P[T<t]$.
+
+On en déduit la fonction de survie $S(t)$ (ou courbe de survie), définit par $S(t)= P[T \geq t]$. $S(t)$ est une fonction monotone décroissante, telle que $S(0)=1$ et lim $S(t)=1$ quand $t\rightarrow \infty$. La fonction quantile du temps de survie est définie par $Q(p)$ = inf$\{t:S(t)\leq p \} ,p\in ]o,1]$. C'est à dire qu'on garde la plus petite valeur de \textit{t} vérifiant la condition $S(t) \leq p$.
+	 
+	 
+	 \textbf{L'objectif de l'analyse de survie} est d'estimer S$(t)$. Pour cela, il existe 3 types d'analyse de survie :
+	 \begin{enumerate}
+	 	\item Méthodes non-paramétriques (Kaplan Meieir)
+	 	\item Méthodes semi-paramétriques (Modèle de Cox)
+	 	\item Méthodes paramétriques (Modèle exponentiel, Weibul).
+	 		 \end{enumerate}
+	
+	 	Seulement, seules les deux dernières permettent la prise en compte de variables explicatives. 
+	 	
+	\subsection{Méthode non paramétrique}
+	
+	 La plus utilisée reste la méthode de Kaplan-Meieir. On cherche donc à estimer $S(t)$. Cependant ce n'est possible qu'à chaque décès observé. On suppose donc $S(t)$ constant entre chaque temps de décès.
+	 
+
+
+
+	 
+	 \begin{lstlisting}[language=R]
+fib <- function(n) {
+  if (n < 2)
+    n
+  else
+    fib(n - 1) + fib(n - 2)
+}
+fib(10) # => 55
+\end{lstlisting}
+
+\section{Meta-Analyse}
+\cite{brun_analyse_2018}
+	\bibliographystyle{apalike}
+	%\bibliographystyle{authordate2}	
+	%\bibliographystyle{abstract}
+	%\bibliographystyle{agsm}
+	\bibliography{Ref} 
+	
+
+
+
+<<plot1, height=4, width=5, fig=TRUE>>=
+data("airquality")
+cat(plot(airquality$Ozone ~ airquality$Wind))
+
+@
+
+\end{document}

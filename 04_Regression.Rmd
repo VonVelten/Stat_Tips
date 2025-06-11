@@ -1,0 +1,324 @@
+
+
+Documents sources utilisés:
+
+- \href{http://r-statistics.co/Linear-Regression.html}{\textcolor{blue}{Linear Regression}}, via le site R-statistics.co
+
+- \href{https://pbil.univ-lyon1.fr/R/pdf/br4.pdf}{\textcolor{blue}{Modèle Linéaire}}, D. Chessel & J. Thioulouse, Université de Lyon 1
+
+- Plusieurs cours d'Agrocampus Ouest (document Perso)
+
+
+## Modèle Linéaire : Régression simple, multiple, Anova et Ancova
+
+Le modèle linéaire classique (LM for linear model) est celui le plus utilisé. Il permet de lier une variable réponse à une ou plusieurs variables explicatives. 
+
+```{r,echo=F}
+rm(list=ls())
+```
+
+
+Un petit exemple, on cherche à la distance de freinage à la vitesse d'un véhicule (jeu de données cars)
+
+```{r}
+library(ggplot2) # pour les graphiques
+data(cars)
+str(cars)
+mod<-lm(dist~speed,data=cars)
+p<-ggplot(data=cars,aes(x=speed,y=dist))+geom_point()+
+  theme_classic()+labs(x="Vitesse du véhicule",y="Distance de freinage")+
+  geom_smooth(method="lm") # Permet d'avoir une estimation de la pente de régression linéaire
+print(p)
+```
+
+
+
+
+### Un choix anodin mais primordial : les contrastes
+
+Un élément très important lors de toutes les régressions est le choix des contrastes. Il existe plusieurs façons d'aborder les contrastes lors des modèles, particulièrement d'Anova :
+
+- contr.sum se traduit en statistique par $\sum_i\alpha_i=0$ (Statistiques à la française) 
+- contr.treatment se traduit en statistique par $alpha_1=0$. Dans ce cas, l'estimation de la moyenne (l'intercept) se fait donc pour le niveau 1 de toutes les valeurs observées en ANOVA. (Statistiques à l'anglo-saxonne)
+- contr.helmert : returns Helmert contrasts, which contrast the second level with the first, the third with the average of the first two, and so on
+
+
+
+
+## L'analyse de Variance 
+
+## Modèles à effet fixe
+
+
+L'objectif est d'expliquer une variable quantitative par des variables qualitatives, aussi appelées facteurs (à plusieurs modalités). Cela revient donc à expliquer la variabilité  . Celle-ci se mesure par sa dispersion, et se quantifie par sa variance. 
+
+### Analyse de variance à un facteur
+
+
+
+
+### Modèle Mixte
+
+Explication des effets aléatoires
+
+```{r}
+library(lme4)
+library(emmeans)
+data("Theoph")
+mod<-lmer(conc~Subject+(1|Time),data=Theoph)
+# mod$residuals
+resid(mod)
+emmeans(mod,c("Subject"))
+```
+
+
+### Modèle Hiérarchique
+
+
+l'aléatoire c'est pas assez complexe
+
+
+
+## Modèle Linéaire Généralisé
+
+
+## Régression Curvilinéaire
+
+
+## Régression non-linéaire 
+
+### Exemples d'applications
+
+#### Modèle systèmique 
+
+On s’intéresse à la dynamique de la digestion d’une molécule chez un poisson. Pour cela, on suit la position de la molécule dans les différentes parties des poissons. On obtient un modèle à 3 compartiments, où la molécule peut avancer selon le schéma présenté après. On obtient alors à 3 équations différnetielle, pour expliquer la dynamique de transfert entre compartiments, comme représenté sur la figure \ref{CinBio}.
+
+\begin{figure}
+  \centering
+  \includegraphics{Regression/Model_Cin_Bio.png}
+  \caption{Modèle cinétique biologique}
+  \label{CinBio}
+\end{figure}
+
+On obtient alors trois équations différentielles pour exprimer l'évolution de la molécule dans les compartiments qui nous intéressent :
+
+- Estomac : $\frac{dq_1}{dt}=-k_1q_1(t)$
+- Intestin : $\frac{dq_2}{dt} =k_1q_1(t)-[k_2+k_3]q_2(t)$
+- Sérum : $\frac{dq_3}{dt}=k_3q_2(t)-k_4q_3(t)$
+
+Si on les résoud, on obtient alors :
+
+- Estomac : $q_1(t)=q_0e^{-k_1t}$
+- Intestin : $q_2(t)=\frac{k_1q_0}{k_2+k_3-k_1}f_1(t)$
+- Sérum :$q_3(t)=f_3(t)$
+
+où $f_1(t)$ et $f_2(t)$ sont des fonctions non-linéaires du temps. On ne peut donc pas réaliser une régression linéaire pour estimer ces deux fonctions. On obtient donc le problème que les systèmes non-linéaires, les méthodes vues précédemment ne sont donc pas applicables. Il faut chercher un autre moyen d'expliquer la variable réponse à partir des variables explicatives.
+
+#### Modélisation allométrique
+
+La modélisation allométrique est souvent utilisée pour suivre l'évolution de la part d'un animal (organe, muscles, lipides, etc..) par rapport au poids/volume total. Par exemple, on suit ici l'évolution du poids des lipides par rapport au poids d'un animal. On obtient souvent des équations de la forme :
+
+\begin{center}
+$\frac{d( \frac{Y}{x})}{dx}= \beta_{1} \frac{Y}{x}$
+\end{center}
+
+ce qui donne après résolution : $Y= \beta_{0}x_{1}^{\beta_{}}+ \epsilon_{i}$. Selon la valeur de beta, plusieurs types de croissances sont distinguables (tardive, isométrique ou précose, dans l'ordre croissant)
+
+
+
+#### Cinétique en biochimie
+
+Quand on étudie de la cinétique, en biochimie notamment, on étudie également des des modèles non-linéaires. (Il ne faut pas cependant la non-linéarité quand on sait faire en linéaire). Pax exemple, on s'intéresse à la décompostion du $\beta$-lactose selon différentes concentrations en NaCl
+
+
+```{r,echo=FALSE,fig.cap="Evolution de la concentration relative en fonction du temps"}
+# head(lactose)
+library(ggplot2)
+lactose<-read.table(file="Regression/74249_betalacto.txt",header=T) 
+# Lien d'origine : http://math.agrocampus-ouest.fr/infoglueDeliverLive/digitalAssets/74249_betalacto.txt
+p<-ggplot(data=lactose,aes(x=Temps,y=CtRel,colour=NaCl))+
+  geom_point()+geom_line(aes(group=NaCl))+
+  labs(x="Temps",y="Concentration relative")+
+  theme_classic()
+print(p)
+```
+
+
+On s'intéresse à l'évolution de la concentration en lactose en fonction du temps, en évolution relative. Pour cela, on utilise le modèle suivant , avec $Y_{t}$ la concentration en $\beta$-lactose à l'instant $t$.
+
+\begin{center}
+$\frac{dY_{t}}{dt}=-kY_{t}^{\mu}$
+
+$Y_{t}=Y_{0}[1+( \mu-1)kY_{0}^{\mu-1}t]^{\frac{1}{1- \mu}}+ \epsilon_{t}$
+
+$\epsilon \hookrightarrow N(0; \sigma)$
+\end{center}
+
+
+
+où $\mu$ et $k$ dépendent des conditions expérimentales. $1 \le \mu \le 2$, k>0.
+
+On a 2 paramètres inconnues : $k$ et $\mu$, 1 seule variable explicative $t$.
+
+\begin{center}
+$Y_{t}=f(t,k, \mu)+ \epsilon_{t}$
+\end{center}
+
+Il faut transformer cela, ici on teste avec le log.
+
+\begin{center}
+$log(Y_{t})=log(Y_{0})+log([1+( \mu-1)kY_{0}^{\mu-1}t]^{\frac{1}{1- \mu}}+ \epsilon_{t})$
+\end{center}
+Mais cela ne marche pas. Il faut chercher la valeur qui minimise l'écart au modèle
+
+\begin{center}
+$SC(k, \mu)= \sum_{i=1}^{n}(Y_{t_{i}}-f(t_{i},k, \mu))^2$
+\end{center}
+
+### Base de la régression
+
+#### Modèle
+
+
+\begin{center}
+$Y=f(x^{1},x^{2},...,x^{p}; \beta_{1}, \beta_{2},..., \beta_{q})+ \epsilon$, où $\epsilon \hookrightarrow N(0, \sigma)$
+
+$Y= \hookrightarrow N[f(x^{1},x^{2},...,x^{p}, \sigma]$
+\end{center}
+
+Où la fonction $f$ est ma surface de réponse du modèle.
+
+Dans le cas du modèle allométrique, on obtient la formule suivante : $Y= \beta_{0}x_{1}^{\beta_{}}+ \epsilon_{i}$
+
+Mais attention, cela est différent de $log(Y)=log( \beta_{0})+ \beta_{1}log(x)+ \epsilon$
+
+#### Estimation des paramètres 
+
+Pour estimer les paramètres, on utilise le critère des moindres carrés.
+
+\begin{center}
+$SC( \beta)= \sum_{i=1}^{n}[Y_{i}-f(x_{i}; \beta)]^2$
+\end{center}
+
+On obtient que la dérivée partielle de la somme des carrés par rapport à chaque coefficient $\beta$ est nulle. Par exemple, dans le cas allométrique, on obtient les deux équations estimantes :
+
+\begin{center}
+ $-2 \sum_{i=1}^{n}x_{i}^{ \hat{ \beta}_{1}}[Y_{i}- \hat{ \beta}_{0}x_{i}^{ \hat{ \beta}_{1}}]=0$
+
+$-2 \sum_{i=1}^{n} \hat{ \beta}_{0}x_{i}^{ \hat{ \beta}_{1}}log(x_{i})[Y_{i}- \hat{ \beta}_{0}x_{i}^{ \hat{\beta}_{1}}]=0$
+\end{center}
+
+Initialisation de l'algorithme d'estimation
+
+On prend l'exemple de NaCl :
+
+Pour trouver le résultat, il faut passer aux dérivées partielles (par rapport à $k$ et $\mu$). Cependant, quand on cherche à résoudre les équations à 2 inconnues, il n'y a pas de solution évidente. On va chercher la fonction à l'aide d'un algorithme pour optimiser ce critère. Le problème est de trouver $k$ et $\mu$ qui annulent la fonction. Il 'agit de l'algorithme de Newton-Raphson. Pour cela, on utilise les tangeantes et leur propriété mathématiques. On calcule la pente de la tangeante à un point, on prend le point d'intersection avec les abcisses, on calcule alors la pente de la tangeante au point associée à cette valeur de x. On continue jusqu'à ce que le point obtenu soit celui de l'intersection avec les abcisses pour la fonction. On utilise le non-linear least squares, nls dans R.On va travailer sur la concentration relative plutot que sur la concentration réele. 
+
+\begin{figure}
+  \centering
+  \includegraphics{Regression/Newton-Raphson.png}
+  \caption{Schema de résolution par l'algorithme de Newton-raphson}
+  \label{NewtonRaphson}
+\end{figure}
+
+
+Pour commencer, il faut choisir initialiser $k$ et $\mu$. On décide de prendre $\mu$ au milieu de l'intervalle dépendant des conditions exprimentales, à savoir [1;2]. Pour k, on prend la pente de la tangeante à la droite de la régression jusqu'à un temps de 8 secondes. On déduit sa valeur initiale à partir de la pente à la tangeante qu'on obtient pour la régression linéaire de la tangeante. On sait à ce moment donné que l'équation à la tangeante vérifie l'équation. En résolvant l'égalité entre la tangeante et l'équation de concentratation relative (connaissant $t$ et $\mu$, on peut faire une estimation de $k$ pour sa valeur initiale). 
+
+```{r}
+head(lactose)
+y=log(lactose$CtRel)
+x=lactose$Temps 
+lm(y[x<=8]~-1+x[x<=8]) # On obtient le l coefficient via l'équation à la tangeante
+```
+
+
+
+On a donc comme équation que :
+
+\begin{center}
+$Log(Y_t)= -0.1332 \times t$
+\end{center}
+
+et à partir de l'équation précédente, pour t = 4, $Y_0$ = 1 et $\mu$ = 1.5, on obtient que :
+
+\begin{center}
+$log(Y_{t})=log(Y_{0})+log([1+( \mu-1)kY_{0}^{\mu-1}t]^{\frac{1}{1- \mu}}+ \epsilon_{t})$
+
+$log(Y_{t})=log(1)+log([1+(1.5-1)kY_{0}^{1.5-1}t]^{\frac{1}{1- 1.5}})$
+
+$log(Y_{t})=log([1+(0.5)kY_{0}^{0.5}t]^{\frac{1}{-0.5}})$
+
+$log(Y_{t})=log([1+(0.5)kY_{0}^{0.5}t]^{-2})$
+\end{center}
+
+et donc à partir de l'équation de tangeante :
+
+\begin{center}
+$-0.1332 \times t = log([1+(0.5)kt]^{-2})$
+
+$10^{-0.1332t}= [1+(0.5)k t]^{-2}$
+
+$10^{-0.1332t*-0.5}= [1+0.5kt]$
+
+$(10^{0.0666t}-1)/(0.5t)= k$
+\end{center}
+
+On trouve alors comme valeur initiale k = 0.41, que l'on ba intégrer dans le modèle pour l'aider à converger
+
+```{r}
+nls(CtRel~(1+(mu-1)*k*Temps*1^(mu-1))^(1/(1-mu)),data=lactose,start=list(k=0.41,mu=1.5))
+```
+
+
+On obtient à partir de la fonction *nls* (pour non linear least squares), les estimations les plus proches de k et $\mu$ indépendement du traitement en NaCL. 
+
+### Test d'effets non-linéaires
+
+#### Comparaisons de modèle
+
+On peut alors se demander si la concentration en chlorure en sodium possède un effet. On réalise une régression pour chaque concentration en NaCl, et on récupère les coefficients $k$ et $\mu$ de chaque régression. On fait alors une régression linéaire sur les valeurs des coefficients en fonction de la concentration. On estime pour cela $k$ et $\mu$ pour chacune des concentrations de NaCL et on réalise une régression linéaire. 
+
+
+
+```{r,echo=FALSE}
+mod<-nls(CtRel~(1+(nu-1)*k*Temps)^(1/(1-nu)),data=lactose,start=list(k=0.41,nu=1.5))
+mod0<-nls(CtRel~(1+(nu-1)*k*Temps)^(1/(1-nu)),data=lactose[1:6,],start=list(k=0.41,nu=1.5))
+mod5<-nls(CtRel~(1+(nu-1)*k*Temps)^(1/(1-nu)),data=lactose[7:12,],start=list(k=0.41,nu=1.5))
+mod10<-nls(CtRel~(1+(nu-1)*k*Temps)^(1/(1-nu)),data=lactose[13:18,],start=list(k=0.41,nu=1.5))
+mod15<-nls(CtRel~(1+(nu-1)*k*Temps)^(1/(1-nu)),data=lactose[19:24,],start=list(k=0.41,nu=1.5))
+k0<-summary(mod0)$parameter[1:2,1]
+k5<-summary(mod5)$parameter[1:2,1]
+k10<-summary(mod10)$parameter[1:2,1]
+k15<-summary(mod15)$parameter[1:2,1]
+k<-rbind(k0,k5,k10,k15)
+k<-as.data.frame(k)
+k[,3]<-c(0,5,10,15)
+names(k)<-c("k","nu","NaCl")
+# Régression linéaire et analyse d'Anova
+lm(k~NaCl,data=k)
+library(car)
+Anova(mod=lm(k~NaCl,data=k), type="III")
+Anova(mod=lm(nu~NaCl,data=k),type="III")
+```
+
+On observe qu'on a donc un effet du chlorure de potassium sur $k$ et $\mu$. Il faut donc tenir compte de la concentration de NaCl dans le modèle. On teste alors à l'aide de fisher si cette effet marqué sur les deux variables est important dans notre modèle. On étude alors l'influence de NaCL sur $k$ et $\mu$. On va donc comparer les modèles aux différentes concentrations pour voir si cet effet est significatif. On va du coup réaliser via les SCER entre les sous-modèles et le modèle simple.
+
+
+```{r}
+SCER<-sum((residuals(mod))^2)
+SCER0<-sum((residuals(mod0))^2)
+SCER5<-sum((residuals(mod5))^2)
+SCER10<-sum((residuals(mod10))^2)
+SCER15<-sum((residuals(mod15))^2)
+SCERss<-SCER0+SCER5+SCER10+SCER15
+fis<-((SCER-SCERss)/6)/(SCERss/16) 
+pf(fis,6,16,lower.tail=FALSE)
+```
+
+On obtient une p-value au test de Fisher très faible, qui montre qu'il faut tenir compte de l'effet de la concentration en Nacl sur les deux coefficients dans la cinétique du $\beta$-lactose.
+
+
+#### Tests de nullité des coefficients
+
+...
+
