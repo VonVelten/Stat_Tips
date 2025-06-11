@@ -71,50 +71,42 @@ knitr::opts_chunk$set(warning=F,comment = "%", fig.pos="H",message = F)
 
 \section*{A propos de ce document :}
 
-Ce document est destiné à une utilisation interne uniquement. Merci de
-ne pas le diffuser, s'agissant d'un document interne de travail, et
-étant un document servant de notes pour la consultance en statistiques.
-Un document spécifique destiné aux étudiants est en cours d'élaboration.
+Ce document est destiné à une utilisation non commerciale. Le but est juste de partager les connaissances que j'ai pu acquises en statistiques aux travers de mon expérience. L'objectif n'est pas de faire un document de référence / cours, mais un partage d'expérience. J'essaye autant que possible d'ajouter les références des données et références utilisés. 
 
-Pour chaque partie, il est précisé les packages nécessaires à installer
-pour faire tourner le code proposé. Il est également important
-d'installer les dépendances des packages pour que tout fonctionne. Des
-commentaires de code sont également ajoutés pour expliquer certains
+Pour chaque partie, il est précisé les packages nécessaires à installer pour faire tourner le code proposé. Il est également important d'installer les dépendances des packages pour que tout fonctionne. Des commentaires de code sont également ajoutés pour expliquer certains
 éléments particuliers lors de la mise en pratique sous R.
 
-Attention, il ne s'agit pas d'un document apprenant à coder en R, mais
-donnant les éléments nécessaires pour réaliser certaines analyses. La
-majorité des analyses sont réalisées à partir de données déjà présentes
-dans R.
+Attention, il ne s'agit pas d'un document apprenant à coder en R, mais donnant les éléments nécessaires pour réaliser certaines analyses. La
+majorité des analyses sont réalisées à partir de données déjà présentes dans R.
 
 \pagebreak
 
 # Quelques bases statistiques
 
-<!-- ```{r child = '01_Base_Stat.Rmd'} -->
-<!-- ``` -->
+```{r child = '01_Base_Stat.Rmd'}
+```
 
 \pagebreak
 
 # Analyse Factorielle
 
-<!-- ```{r child = '02_Analyse_Factorielle.Rmd'} -->
-<!-- ``` -->
+```{r child = '02_Analyse_Factorielle.Rmd'}
+```
 
 \pagebreak
 
-# Classification
+<!-- # Classification -->
 
 <!-- ```{r child = '03_Classification.Rmd'} -->
 <!-- ``` -->
 
-\pagebreak
+<!-- \pagebreak -->
 
 # Régression
 
-<!-- ```{r child = '04_Regression.Rmd'} -->
+```{r child = '04_Regression.Rmd'}
 
-<!-- ``` -->
+```
 
 # Régression Logistique
 
@@ -122,7 +114,6 @@ dans R.
 <!-- #  -->
 <!-- # ``` -->
 
-# Sélection de modèles
 
 # Sélection de modèles
 
@@ -191,49 +182,49 @@ mod<-glm(TMP89~.,data=TMP[is.na(TMP$TMP89)==F,c(1,3:41)])
 summary(mod)
 ```
 
-\pagebreak
+<!-- \pagebreak -->
 
-# Analyse Discriminante (Linéaire et Quadratique)
+<!-- # Analyse Discriminante (Linéaire et Quadratique) -->
 
 <!-- ```{r child = '07_LDA.Rmd'} -->
 <!-- ``` -->
 
-\pagebreak
+<!-- \pagebreak -->
 
-# Analyse de survie
+<!-- # Analyse de survie -->
 
 <!-- ```{r child = '08_Survie.Rmd'} -->
 <!-- ``` -->
 
-\pagebreak
+<!-- \pagebreak -->
 
-# Meta-analyse
+<!-- # Meta-analyse -->
 
 <!-- ```{r child = '10_MA.Rmd'} -->
 <!-- ``` -->
 
-# Machine Learning
+<!-- # Machine Learning -->
 
-```{r child = '12_ML.Rmd'}
+<!-- ```{r child = '12_ML.Rmd'} -->
 
-```
+<!-- ``` -->
 
-# Deep Learning
-
-
-```{r child = '14_ML.Rmd'}
-
-```
+<!-- # Deep Learning -->
 
 
+<!-- ```{r child = '14_ML.Rmd'} -->
+
+<!-- ``` -->
 
 
-# Traitement d'image
 
 
-```{r child = '16_Image.Rmd'}
+<!-- # Traitement d'image -->
 
-```
+
+<!-- ```{r child = '16_Image.Rmd'} -->
+
+<!-- ``` -->
 
 
 

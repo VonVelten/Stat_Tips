@@ -11,7 +11,12 @@ Documents sources utilisés:
 
 ## Modèle Linéaire : Régression simple, multiple, Anova et Ancova
 
-Le modèle linéaire classique (LM for linear model) est celui le plus utilisé. Il permet de lier une variable réponse à une ou plusieurs variables explicatives. 
+Le modèle linéaire classique (LM for linear model) est celui le plus utilisé. Il permet de lier une variable réponse à une ou plusieurs variables explicatives. On a tendance à découper beaucoup de modèle dedans, Anova, régression simple, régression multiple ou ANVOCA. Au final, toutes ces approches sont toutes issues d'une même théorie, le modèle linéare. Dans ce cas, la variable réponse est quantitative, c'est cela qui regroupe ces modèles, et suit une loi Normale. Du coup, quelles différences entre ces éléments ?
+
+- ANOVA : Analyse de l'effet d'un ou plusieurs facteurs qualitatif
+- Régression simple : Analyse de l'effet d'une variable quantitative
+- Régression multiple : Analyse de l'effet de plusieurs variables quantitatives 
+- ANCOVA : Analyse de l'effet de plusieurs facteurs , avec des variables qualitatives et quantitatives
 
 ```{r,echo=F}
 rm(list=ls())
@@ -22,9 +27,9 @@ Un petit exemple, on cherche à la distance de freinage à la vitesse d'un véhi
 
 ```{r}
 library(ggplot2) # pour les graphiques
-data(cars)
-str(cars)
-mod<-lm(dist~speed,data=cars)
+data(cars) 
+str(cars) # Avoir un apercu des données, et notamment de leur natures
+mod<-lm(dist~speed,data=cars) # Modèle linéaire
 p<-ggplot(data=cars,aes(x=speed,y=dist))+geom_point()+
   theme_classic()+labs(x="Vitesse du véhicule",y="Distance de freinage")+
   geom_smooth(method="lm") # Permet d'avoir une estimation de la pente de régression linéaire
@@ -42,7 +47,53 @@ Un élément très important lors de toutes les régressions est le choix des co
 - contr.treatment se traduit en statistique par $alpha_1=0$. Dans ce cas, l'estimation de la moyenne (l'intercept) se fait donc pour le niveau 1 de toutes les valeurs observées en ANOVA. (Statistiques à l'anglo-saxonne)
 - contr.helmert : returns Helmert contrasts, which contrast the second level with the first, the third with the average of the first two, and so on
 
+C'est important si on veut intérpréter les coefficients directement, à partir des sorties du modèle linéaire, notamment sur des variables qualitatives. MAis on peut passer cette étape à l'aide de package. 
 
+```{r}
+summary(mod)
+```
+
+
+
+Cette sortie donne la moyenne pour une vitesse nulle est de -17.58, et on prend 3.93 m de freinage tous les 1km/h gagnés.
+
+
+## Estimation des coefficients
+
+On va profiter du jeu de données *diamonds* pour cela. On va s'intéresser à l'effet du poids, de la taill, la couleur et de sa clareté sur le prix
+
+```{r}
+data("diamonds")
+mod=lm(price~cut+color+clarity+carat,diamonds)
+library(car)
+Anova(mod,type="III")
+```
+
+On peut voir que toutes les variables sont ultra signigicatifes, avec des probabilités en deça de la limiete de calcul de R (2.2e-16).
+
+Comment avoir des estimer des moyennes pour chaque niveau de facteur 
+
+```{r}
+library(emmeans)
+emmeans(mod,"cut")
+```
+
+et si on croise
+
+```{r}
+mod2=lm(price~(cut+color+clarity)^2+carat,diamonds) 
+# le ^2 permet de tester toutes les combinaisons de niveau 2 au max
+
+emmeans(mod2,c("cut","color"))
+```
+
+
+Et si on veut savoir les niveaux qui se recoupent ?
+
+```{r}
+library(multcomp)
+cld(emmeans(mod2,c("cut")))
+```
 
 
 ## L'analyse de Variance 
